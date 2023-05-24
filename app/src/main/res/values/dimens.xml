@@ -11,7 +11,7 @@
 
 
     <dimen name="margin_settings_menu_top">22dp</dimen>
-    <dimen name="margin_settings_menu_bottom">21dp</dimen>
+    <dimen name="margin_settings_menu_bottom">22dp</dimen>
     <dimen name="margin_settings_menu_start">16dp</dimen>
     <dimen name="margin_settings_menu_end">12dp</dimen>
 </resources>

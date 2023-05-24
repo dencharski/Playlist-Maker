@@ -15,25 +15,27 @@
 
         <ImageView
             android:id="@+id/image_view_back_arrow"
+            style="@style/SettingsImageViewBackArrowStyles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_settings_menu_start"
             android:layout_marginTop="@dimen/margin_settings_menu_start"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="@dimen/margin_settings_menu_start"
-            android:src="@drawable/baseline_arrow_back_24"
-            app:tint="@color/button_textColor" />
+            android:src="@drawable/baseline_arrow_back_24" />
 
         <TextView
             android:id="@+id/text_view_settings"
+            style="@style/SettingsTextViewItemStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="14dp"
             android:layout_marginEnd="@dimen/margin_settings_menu_end"
             android:layout_marginBottom="@dimen/margin_settings_menu_end"
             android:layout_weight="1"
+            android:fontFamily="@font/ys_display_medium"
             android:text="@string/settings"
-            android:textColor="@color/black"
             android:textSize="@dimen/primary_text_size" />
 
 
@@ -46,16 +48,8 @@
 
         <TextView
             android:id="@+id/text_view_dark_theme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_settings_menu_start"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_end"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:layout_weight="1"
-            android:text="@string/dark_theme"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/SettingsTextViewItemStyle"
+            android:text="@string/dark_theme" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_dark_theme"
@@ -75,26 +69,13 @@
 
         <TextView
             android:id="@+id/text_view_shared"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_settings_menu_start"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_end"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:layout_weight="1"
-            android:text="@string/shared_app"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/SettingsTextViewItemStyle"
+            android:text="@string/shared_app" />
 
         <ImageView
             android:id="@+id/image_view_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_start"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:src="@drawable/baseline_share_24"
-            app:tint="@color/image_color" />
+            style="@style/SettingsImageViewItemStyles"
+            android:src="@drawable/baseline_share_24" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,26 +85,13 @@
 
         <TextView
             android:id="@+id/text_view_write_support"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_settings_menu_start"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_end"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:layout_weight="1"
-            android:text="@string/write_support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/SettingsTextViewItemStyle"
+            android:text="@string/write_support" />
 
         <ImageView
             android:id="@+id/image_view_write_support"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_start"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:src="@drawable/baseline_support_agent_24"
-            app:tint="@color/image_color" />
+            style="@style/SettingsImageViewItemStyles"
+            android:src="@drawable/baseline_support_agent_24" />
     </LinearLayout>
 
     <LinearLayout
@@ -133,25 +101,12 @@
 
         <TextView
             android:id="@+id/text_view_user_agreement"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_settings_menu_start"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_end"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:layout_weight="1"
-            android:text="@string/user_agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/SettingsTextViewItemStyle"
+            android:text="@string/user_agreement" />
 
         <ImageView
             android:id="@+id/image_view_user_agreement"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_settings_menu_top"
-            android:layout_marginEnd="@dimen/margin_settings_menu_start"
-            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
-            app:tint="@color/image_color" />
+            style="@style/SettingsImageViewItemStyles"
+            android:src="@drawable/baseline_arrow_forward_ios_24" />
     </LinearLayout>
 </LinearLayout>
