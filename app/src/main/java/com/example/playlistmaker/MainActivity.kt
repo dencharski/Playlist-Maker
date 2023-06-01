@@ -18,20 +18,24 @@ class MainActivity : AppCompatActivity() {
 
         val clickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-               startActivity(Intent(this@MainActivity,SearchActivity::class.java))
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
             }
         }
         buttonSearch.setOnClickListener(clickListener)
 
         buttonMediateka.setOnClickListener {
-            val intent=Intent(this,MediatekaActivity::class.java)
+            val intent = Intent(this, MediatekaActivity::class.java)
             startActivity(intent)
         }
 
+        buttonSettings.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    SettingsActivity::class.java
+                )
+            )
+        }
+    }
 
-    }
-    // :-)
-    fun showToastForButtonSettings(view: View) {
-        startActivity(Intent(this,SettingsActivity::class.java))
-    }
 }

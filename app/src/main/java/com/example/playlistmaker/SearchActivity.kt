@@ -14,9 +14,9 @@ import androidx.core.widget.addTextChangedListener
 
 class SearchActivity : AppCompatActivity() {
 
-    var editTextSearch: EditText? = null
-    var clearButton: ImageView? = null
-    var goBackButton: ImageView? = null
+    private var editTextSearch: EditText? = null
+    private var clearButton: ImageView? = null
+    private var goBackButton: ImageView? = null
     private val key: String = "key"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -13,4 +13,11 @@
     <string name="user_agreement">Пользовательское соглашение</string>
 
 
+    <string name="android_course_url">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="mail_address">dencharski@yandex.ru</string>
+    <string name="mail_title">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="mail_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="practicum_offer">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="url_string">mailto:</string>
+    <string name="intent_type">text/plain</string>
 </resources>

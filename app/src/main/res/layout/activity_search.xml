@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/margin_search_image"
         android:orientation="horizontal">
 
         <ImageView
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_settings_menu_start"
             android:layout_marginTop="@dimen/margin_settings_menu_start"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="@dimen/margin_settings_menu_bottom"
             android:layout_marginBottom="@dimen/margin_settings_menu_start"
             android:src="@drawable/baseline_arrow_back_24" />
 
@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="@dimen/margin_settings_menu_end"
             android:layout_marginEnd="@dimen/margin_settings_menu_end"
             android:layout_marginBottom="@dimen/margin_settings_menu_end"
             android:layout_weight="1"
@@ -48,7 +48,7 @@
         android:layout_marginTop="@dimen/margin_search_layout_top_bottom"
         android:layout_marginEnd="@dimen/margin_settings_menu_start"
         android:layout_marginBottom="@dimen/margin_search_layout_top_bottom"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="@dimen/margin_search_layout_top_bottom">
 
         <LinearLayout
             style="@style/SearchLayoutStyles"
@@ -59,6 +59,13 @@
             <ImageView
                 android:id="@+id/image_view_search"
                 style="@style/SearchImageViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/margin_settings_menu_start"
+                android:layout_marginTop="@dimen/margin_search_layout_top_bottom"
+                android:layout_marginEnd="@dimen/margin_search_image"
+                android:layout_marginBottom="@dimen/margin_search_layout_top_bottom"
                 android:src="@drawable/baseline_search_24" />
 
             <EditText
@@ -81,6 +88,13 @@
             <ImageView
                 android:id="@+id/image_view_clear"
                 style="@style/SearchImageViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/margin_settings_menu_start"
+                android:layout_marginTop="@dimen/margin_search_layout_top_bottom"
+                android:layout_marginEnd="@dimen/margin_search_image"
+                android:layout_marginBottom="@dimen/margin_search_layout_top_bottom"
                 android:src="@drawable/baseline_clear_24"
                 android:visibility="gone" />
         </LinearLayout>

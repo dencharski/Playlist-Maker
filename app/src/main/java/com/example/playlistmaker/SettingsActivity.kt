@@ -1,15 +1,14 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.Intent.ACTION_SENDTO
-import android.content.Intent.EXTRA_TEXT
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.LinearLayout
 
 class SettingsActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,39 +17,39 @@ class SettingsActivity : AppCompatActivity() {
         val imageViewBackArrow: ImageView = findViewById<ImageView>(R.id.image_view_back_arrow)
         imageViewBackArrow.setOnClickListener { finish() }
 
-        val imageViewShare: ImageView = findViewById(R.id.image_view_share)
-        imageViewShare.setOnClickListener {
+        val buttonShare: LinearLayout = findViewById(R.id.layout_shared_app)
+        buttonShare.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
-            intent.type = "text/plain"
+            intent.type = getString(R.string.intent_type)
             intent.putExtra(
                 Intent.EXTRA_TEXT,
-                "https://practicum.yandex.ru/profile/android-developer/"
+                getString(R.string.android_course_url)
             )
             startActivity(intent)
         }
 
-        val imageViewWriteSupport: ImageView = findViewById(R.id.image_view_write_support)
-        imageViewWriteSupport.setOnClickListener {
+        val buttonWriteSupport: LinearLayout = findViewById(R.id.layout_write_support)
+        buttonWriteSupport.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SENDTO
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("dencharski@yandex.ru"))
+            intent.data = Uri.parse(getString(R.string.url_string))
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_address)))
             intent.putExtra(
                 Intent.EXTRA_SUBJECT,
-                "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+                getString(R.string.mail_title)
             )
             intent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Спасибо разработчикам и разработчицам за крутое приложение!"
+                getString(R.string.mail_text)
             )
             startActivity(intent)
         }
-        val imageViewUserAgreement: ImageView = findViewById(R.id.image_view_user_agreement)
-        imageViewUserAgreement.setOnClickListener {
+        val buttonUserAgreement: LinearLayout = findViewById(R.id.layout_user_agreement)
+        buttonUserAgreement.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
-            intent.data = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            intent.data = Uri.parse(getString(R.string.practicum_offer))
             startActivity(intent)
 
         }

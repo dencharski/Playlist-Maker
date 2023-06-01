@@ -11,13 +11,8 @@
         <item name="android:background">@color/main_background_color_night</item>
     </style>
 
-    <style name="MainButtonStyle" parent="Base.Theme.PlaylistMaker">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_marginStart">@dimen/base_margin</item>
-        <item name="android:layout_marginEnd">@dimen/base_margin</item>
-        <item name="android:layout_marginBottom">@dimen/base_margin</item>
-        <item name="android:layout_weight">1</item>
+    <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/button_textColor</item>
@@ -30,54 +25,30 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="SettingsTextViewItemStyle" parent="Base.Theme.PlaylistMaker">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/margin_settings_menu_start</item>
-        <item name="android:layout_marginTop">@dimen/margin_settings_menu_top</item>
-        <item name="android:layout_marginEnd">@dimen/margin_settings_menu_end</item>
-        <item name="android:layout_marginBottom">@dimen/margin_settings_menu_bottom</item>
-        <item name="android:layout_weight">1</item>
+    <style name="SettingsTextViewItemStyle" >
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="SettingsImageViewItemStyles" parent="Base.Theme.PlaylistMaker">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_settings_menu_top</item>
-        <item name="android:layout_marginEnd">@dimen/margin_settings_menu_start</item>
-        <item name="android:layout_marginBottom">@dimen/margin_settings_menu_bottom</item>
+    <style name="SettingsImageViewItemStyles" >
         <item name="tint">@color/white</item>
     </style>
 
-    <style name="SettingsImageViewBackArrowStyles" parent="Base.Theme.PlaylistMaker">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_settings_menu_top</item>
-        <item name="android:layout_marginEnd">@dimen/margin_settings_menu_start</item>
-        <item name="android:layout_marginBottom">@dimen/margin_settings_menu_bottom</item>
+    <style name="SettingsImageViewBackArrowStyles" >
         <item name="tint">@color/white</item>
     </style>
 
-    <style name="SearchLayoutStyles" parent="Base.Theme.PlaylistMaker">
+    <style name="SearchLayoutStyles" >
         <item name="android:background">@color/white</item>
-
     </style>
 
     <style name="SearchImageViewStyle">
         <item name="tint">@color/button_textColor</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginStart">@dimen/margin_settings_menu_start</item>
-        <item name="android:layout_marginTop">@dimen/margin_search_layout_top_bottom</item>
-        <item name="android:layout_marginEnd">@dimen/margin_search_image</item>
-        <item name="android:layout_marginBottom">@dimen/margin_search_layout_top_bottom</item>
     </style>
 
     <style name="SearchEditTextStyle">
         <item name="android:textColorHint">@color/button_textColor</item>
+        <item name="android:textColor">@color/button_textColor</item>
     </style>
 </resources>
