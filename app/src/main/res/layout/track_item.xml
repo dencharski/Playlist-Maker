@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/image_view_artwork"
+        android:layout_width="@dimen/SearchTrackItemArtworkWidthHeight"
+        android:layout_height="@dimen/SearchTrackItemArtworkWidthHeight"
+        android:layout_marginStart="12dp"
+        android:layout_marginVertical="@dimen/margin_search_layout_top_bottom"
+        android:layout_marginEnd="@dimen/margin_search_layout_top_bottom"
+        android:layout_weight="0"
+        android:src="@drawable/placeholder" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view_track_name"
+            style="@style/SearchItemTrackNameTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/top_title_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Very important news text" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_search_image"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_view_artist_name"
+                style="@style/SearchItemTrackInfoTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Very important news text" />
+
+            <ImageView
+                android:id="@+id/image_view_dot_point"
+                style="@style/SearchItemTrackImageDotPointImageStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/margin_search_image"
+                android:src="@drawable/baseline_circle_4" />
+
+            <TextView
+                android:id="@+id/text_view_track_time"
+                style="@style/SearchItemTrackInfoTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="5.21" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_view_arrow_forward"
+        style="@style/SearchItemTrackImageViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/margin_search_image"
+        android:layout_marginEnd="@dimen/margin_settings_menu_end"
+        android:layout_weight="0"
+        android:src="@drawable/baseline_arrow_forward_ios_24" />
+</LinearLayout>

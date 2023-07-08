@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="settings_text_size">16sp</dimen>
+    <dimen name="search_track_item_info_text_size">11sp</dimen>
+
+    <dimen name="top_title_margin">12dp</dimen>
+    <dimen name="bottom_title_margin">40dp</dimen>
+    <dimen name="base_margin">16dp</dimen>
+    <dimen name="icon_padding">16dp</dimen>
+    <dimen name="button_corner_radius">16dp</dimen>
+
+
+    <dimen name="margin_settings_menu_top">24dp</dimen>
+    <dimen name="margin_settings_menu_bottom">24dp</dimen>
+    <dimen name="margin_settings_menu_start">16dp</dimen>
+    <dimen name="margin_settings_menu_end">12dp</dimen>
+
+    <dimen name="margin_search_image">4dp</dimen>
+    <dimen name="margin_search_layout_top_bottom">8dp</dimen>
+    <dimen name="height_item_view_track">64dp</dimen>
+
+    <dimen name="SearchTrackItemArtworkWidthHeight">48dp</dimen>
+</resources>
