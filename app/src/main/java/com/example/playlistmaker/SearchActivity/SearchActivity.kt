@@ -19,9 +19,12 @@ class SearchActivity : AppCompatActivity() {
     private var editTextSearch: EditText? = null
     private var clearButton: ImageView? = null
     private var goBackButton: ImageView? = null
-    private val key: String = "key"
     private var trackListAdapter: TrackListAdapter? = null
     private var recyclerViewTrackList: RecyclerView? = null
+
+    companion object{
+        private const val key: String = "key"
+    }
 
     private val trackList = arrayListOf<Track>(
         Track(

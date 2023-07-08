@@ -11,9 +11,8 @@
         android:layout_width="@dimen/SearchTrackItemArtworkWidthHeight"
         android:layout_height="@dimen/SearchTrackItemArtworkWidthHeight"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="@dimen/margin_search_layout_top_bottom"
+        android:layout_marginVertical="@dimen/margin_search_layout_top_bottom"
         android:layout_marginEnd="@dimen/margin_search_layout_top_bottom"
-        android:layout_marginBottom="@dimen/margin_search_layout_top_bottom"
         android:layout_weight="0"
         android:src="@drawable/placeholder" />
 

@@ -16,15 +16,17 @@ import com.example.playlistmaker.Track
 class TrackListAdapter(private val trackList: ArrayList<Track>) :
     RecyclerView.Adapter<TrackListAdapter.TrackViewHolder>() {
 
+    companion object{
+        const val cornerRadius:Float=2f
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
         )
     }
 
-    override fun getItemCount(): Int {
-        return trackList.size
-    }
+    override fun getItemCount() = trackList.size
+
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
@@ -48,7 +50,7 @@ class TrackListAdapter(private val trackList: ArrayList<Track>) :
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(dpToPx(2f,itemView.context)))
+                .transform(RoundedCorners(dpToPx(cornerRadius,itemView.context)))
                 .into(artworkImageView)
 
         }
