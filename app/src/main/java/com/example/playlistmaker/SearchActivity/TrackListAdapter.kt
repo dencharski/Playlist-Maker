@@ -12,10 +12,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TrackListAdapter(private val trackList: ArrayList<Track>) :
+class TrackListAdapter() :
     RecyclerView.Adapter<TrackListAdapter.TrackViewHolder>() {
 
+    private var trackList= arrayListOf<Track>()
     companion object{
         const val cornerRadius:Float=2f
     }
@@ -32,6 +35,10 @@ class TrackListAdapter(private val trackList: ArrayList<Track>) :
         holder.bind(trackList[position])
     }
 
+    fun setTrackList(trackList:ArrayList<Track>){
+        this.trackList=trackList
+        notifyDataSetChanged()
+    }
 
     class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -44,7 +51,8 @@ class TrackListAdapter(private val trackList: ArrayList<Track>) :
         fun bind(track: Track) {
             trackName.text = track.trackName
             artistName.text = track.artistName
-            trackTime.text = track.trackTime
+            trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLongOrNull())
+
 
             Glide.with(itemView)
                 .load(track.artworkUrl100)

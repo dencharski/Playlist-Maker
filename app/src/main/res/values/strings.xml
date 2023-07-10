@@ -20,4 +20,7 @@
     <string name="practicum_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="url_string">mailto:</string>
     <string name="intent_type">text/plain</string>
+    <string name="error_internet_connection_text">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh_text">Обновить</string>
+    <string name="empty_result_text">Ничего не нашлось</string>
 </resources>
