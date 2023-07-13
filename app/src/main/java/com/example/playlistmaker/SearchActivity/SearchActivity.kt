@@ -18,6 +18,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.Track
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.internet.ITunesSearchInterface
 import com.example.playlistmaker.internet.ResponseModel
 import retrofit2.Call
@@ -28,6 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
+    private var binding: ActivitySearchBinding? = null
+
     private var editTextSearch: EditText? = null
     private var clearButton: ImageView? = null
     private var goBackButton: ImageView? = null
@@ -35,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
     private var recyclerViewTrackList: RecyclerView? = null
     private var layoutEmptyResult: LinearLayout? = null
     private var layoutErrorInternetConnection: LinearLayout? = null
-    private var layoutRecyclerView:FrameLayout?=null
+    private var layoutRecyclerView: FrameLayout? = null
     private var buttonRefresh: Button? = null
 
     private val retrofit = Retrofit.Builder()
@@ -49,21 +52,25 @@ class SearchActivity : AppCompatActivity() {
         private const val key: String = "key"
         private const val baseUrl = "https://itunes.apple.com"
         private val trackList = arrayListOf<Track>()
+        private const val codeSuccess = 200
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        val view = binding?.root
+        setContentView(view)
 
-        editTextSearch = findViewById<EditText>(R.id.edit_text_search)
-        clearButton = findViewById<ImageView>(R.id.image_view_clear)
-        goBackButton = findViewById(R.id.image_view_back_arrow)
-        recyclerViewTrackList = findViewById(R.id.recycler_view_track_list)
-        layoutEmptyResult = findViewById(R.id.layout_empty_result)
-        layoutErrorInternetConnection = findViewById(R.id.layout_no_internet_connection)
-        layoutRecyclerView=findViewById(R.id.layout_recycler_view)
-        buttonRefresh = findViewById(R.id.button_refresh)
+
+        editTextSearch = binding?.editTextSearch
+        clearButton = binding?.imageViewClear
+        goBackButton = binding?.imageViewBackArrow
+        recyclerViewTrackList = binding?.recyclerViewTrackList
+        layoutEmptyResult = binding?.layoutEmptyResult
+        layoutErrorInternetConnection = binding?.layoutNoInternetConnection
+        layoutRecyclerView = binding?.layoutRecyclerView
+        buttonRefresh = binding?.buttonRefresh
 
         trackListAdapter = TrackListAdapter()
         trackListAdapter?.setTrackList(trackList)
@@ -113,9 +120,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchTrack(text: String) {
-        layoutEmptyResult?.visibility = View.GONE
-        layoutErrorInternetConnection?.visibility = View.GONE
-        layoutRecyclerView?.visibility=View.VISIBLE
+
+        getNewRequest()
 
         iTunesSearchInterface
             .search(text)
@@ -126,10 +132,13 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     Log.d("TRANSLATION_LOG", "Status code: ${response.code()}")
 
-                    if (response.code() == 200) {
+                    if (response.code() == codeSuccess) {
 
                         if (response.body()?.results?.size != 0) {
-                            Log.d("TRANSLATION_LOG", "response.body()?.results?.size: ${response.body()?.results?.size}")
+                            Log.d(
+                                "TRANSLATION_LOG",
+                                "response.body()?.results?.size: ${response.body()?.results?.size}"
+                            )
                             response.body()?.results?.forEach {
                                 Log.d(
                                     "TRANSLATION_LOG",
@@ -141,27 +150,46 @@ class SearchActivity : AppCompatActivity() {
                             response.body()?.results?.let { trackList.addAll(it) }
                             trackListAdapter?.setTrackList(trackList)
                         } else {
-                            Log.d("TRANSLATION_LOG", "response.body()?.results?.size == 0: ${response.body()?.results?.size}")
-                            layoutEmptyResult?.visibility = View.VISIBLE
-                            layoutRecyclerView?.visibility=View.GONE
+                            Log.d(
+                                "TRANSLATION_LOG",
+                                "response.body()?.results?.size == 0: ${response.body()?.results?.size}"
+                            )
+
+                            showEmptyResult()
+
                         }
                     } else {
                         Log.d("TRANSLATION_LOG", "Trouble status code: ${response.code()}")
-                        layoutErrorInternetConnection?.visibility = View.VISIBLE
-                        layoutRecyclerView?.visibility=View.GONE
+                        showErrorResult()
                     }
 
                 }
 
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                     Log.d("TRANSLATION_LOG", "Trouble status code: ${t.message}")
-                    layoutErrorInternetConnection?.visibility = View.VISIBLE
-                    layoutEmptyResult?.visibility=View.GONE
-                    layoutRecyclerView?.visibility=View.GONE
+                    showErrorResult()
                 }
 
             })
 
+    }
+
+    private fun getNewRequest() {
+        layoutEmptyResult?.visibility = View.GONE
+        layoutErrorInternetConnection?.visibility = View.GONE
+        layoutRecyclerView?.visibility = View.VISIBLE
+    }
+
+    private fun showEmptyResult() {
+        layoutEmptyResult?.visibility = View.VISIBLE
+        layoutErrorInternetConnection?.visibility = View.GONE
+        layoutRecyclerView?.visibility = View.GONE
+    }
+
+    private fun showErrorResult() {
+        layoutErrorInternetConnection?.visibility = View.VISIBLE
+        layoutEmptyResult?.visibility = View.GONE
+        layoutRecyclerView?.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {

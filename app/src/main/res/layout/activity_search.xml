@@ -142,6 +142,7 @@
             android:textSize="19sp" />
     </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/layout_no_internet_connection"
         android:layout_width="match_parent"
