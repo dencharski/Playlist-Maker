@@ -60,4 +60,16 @@
         <item name="tint">@color/image_color</item>
     </style>
 
+    <style name="SearchItemTrackButtonRefreshStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/button_textColor</item>
+    </style>
+    <style name="SearchItemTrackErrorInternetConnectionImageStyle">
+        <item name="android:src">@drawable/light_mode</item>
+
+    </style>
+    <style name="SearchItemTrackEmptyResultImageStyle">
+        <item name="android:src">@drawable/light_mode_empty</item>
+    </style>
+
 </resources>
