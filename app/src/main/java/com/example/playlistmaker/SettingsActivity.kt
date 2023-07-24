@@ -4,21 +4,31 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
+    private var binding:ActivitySettingsBinding?=null
 
+    companion object{
+        const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"
+        const val EDIT_TEXT_KEY = "key_for_edit_text"
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        val view = binding?.root
+        setContentView(view)
 
-        val imageViewBackArrow: ImageView = findViewById<ImageView>(R.id.image_view_back_arrow)
-        imageViewBackArrow.setOnClickListener { finish() }
 
-        val buttonShare: LinearLayout = findViewById(R.id.layout_shared_app)
-        buttonShare.setOnClickListener {
+        binding?.imageViewBackArrow?.setOnClickListener { finish() }
+
+        binding?.layoutSharedApp?.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
             intent.type = getString(R.string.intent_type)
@@ -29,8 +39,19 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val buttonWriteSupport: LinearLayout = findViewById(R.id.layout_write_support)
-        buttonWriteSupport.setOnClickListener {
+        if ((applicationContext as App).darkTheme){
+            binding?.switchDarkTheme?.isChecked=true
+            Log.d("DarkTheme","true")
+        }else{
+            binding?.switchDarkTheme?.isChecked=false
+            Log.d("DarkTheme","false")
+        }
+
+        binding?.switchDarkTheme?.setOnCheckedChangeListener{ switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
+
+        binding?.layoutWriteSupport?.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SENDTO
             intent.data = Uri.parse(getString(R.string.url_string))
@@ -45,8 +66,8 @@ class SettingsActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
-        val buttonUserAgreement: LinearLayout = findViewById(R.id.layout_user_agreement)
-        buttonUserAgreement.setOnClickListener {
+
+        binding?.layoutUserAgreement?.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.data = Uri.parse(getString(R.string.practicum_offer))

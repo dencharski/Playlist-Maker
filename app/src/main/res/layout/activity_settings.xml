@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:text="@string/dark_theme" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_dark_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
