@@ -3,7 +3,6 @@ package com.example.playlistmaker.SearchActivity
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,12 +15,12 @@ import com.example.playlistmaker.databinding.TrackItemBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackListAdapter() :
-    RecyclerView.Adapter<TrackListAdapter.TrackViewHolder>() {
+class TrackListAdapterHistory:
+    RecyclerView.Adapter<TrackListAdapterHistory.TrackViewHolder>() {
 
     private var trackList = arrayListOf<Track>()
 
-    private var itemClickListener: ItemClickInterface? = null
+    private var itemClickListener: ItemClickInterfaceHistory? = null
 
     companion object {
         const val cornerRadius: Float = 2f
@@ -51,27 +50,27 @@ class TrackListAdapter() :
         notifyDataSetChanged()
     }
 
-    interface ItemClickInterface {
-        fun onItemClick(track:Track)
+    interface ItemClickInterfaceHistory {
+        fun onItemClickHistory(track: Track)
     }
 
-    fun setInItemClickListener(itemClickListener: ItemClickInterface) {
+    fun setInItemClickListener(itemClickListener: ItemClickInterfaceHistory) {
         this.itemClickListener = itemClickListener
     }
 
     class TrackViewHolder(
         binding: TrackItemBinding,
-        private val itemClickListener: ItemClickInterface?
+        private val itemClickListener: ItemClickInterfaceHistory?
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val trackName: TextView = binding.textViewTrackName
         private val artistName: TextView = binding.textViewArtistName
         private val trackTime: TextView = binding.textViewTrackTime
         private val artworkImageView: ImageView = binding.imageViewArtwork
-        private var itemTrack:Track?=null
+        private var itemTrack: Track?=null
 
         init {
-            itemView.setOnClickListener { itemTrack?.let { it1 -> itemClickListener?.onItemClick(it1) } }
+            itemView.setOnClickListener { itemTrack?.let { it1 -> itemClickListener?.onItemClickHistory(it1) } }
         }
 
         fun bind(track: Track) {

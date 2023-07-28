@@ -34,7 +34,6 @@
             android:layout_marginEnd="@dimen/margin_settings_menu_end"
             android:layout_marginBottom="@dimen/margin_settings_menu_end"
             android:layout_weight="1"
-            android:fontFamily="@font/ys_display_medium"
             android:text="@string/search"
             android:textSize="@dimen/primary_text_size" />
 
@@ -106,6 +105,7 @@
         android:id="@+id/layout_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         >
 
         <androidx.recyclerview.widget.RecyclerView
@@ -122,26 +122,23 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/image_view_empty_result"
+            style="@style/SearchItemTrackEmptyResultImageStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SearchItemTrackEmptyResultImageStyle"
 
             />
 
         <TextView
+            style="@style/SearchItemTrackTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_settings_menu_bottom"
-            android:fontFamily="@font/ys_display_medium"
-            android:text="@string/empty_result_text"
-            android:textSize="19sp" />
+            android:text="@string/empty_result_text" />
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/layout_no_internet_connection"
@@ -149,8 +146,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/image_view_no_internet_connection"
@@ -162,23 +158,58 @@
 
         <TextView
             android:id="@+id/text_view_no_internet_connection"
+            style="@style/SearchItemTrackTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_settings_menu_bottom"
-            android:fontFamily="@font/ys_display_medium"
             android:gravity="center"
-            android:text="@string/error_internet_connection_text"
-            android:textSize="19sp" />
+            android:text="@string/error_internet_connection_text" />
 
         <Button
             android:id="@+id/button_refresh"
             style="@style/SearchItemTrackButtonRefreshStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ys_display_medium"
             android:text="@string/refresh_text"
             android:textSize="14sp"
-            android:fontFamily="@font/ys_display_medium"
 
             />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/text_view_you_search"
+            style="@style/SearchItemTrackTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/margin_settings_menu_bottom"
+            android:layout_weight="0"
+            android:text="@string/you_search" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_track_list_history"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <Button
+            android:id="@+id/button_clean_history"
+            style="@style/SearchItemTrackButtonRefreshStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:text="@string/clean_history" />
     </LinearLayout>
 </LinearLayout>
