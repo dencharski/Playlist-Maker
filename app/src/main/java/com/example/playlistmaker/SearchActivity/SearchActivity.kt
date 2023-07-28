@@ -31,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     TrackListAdapterHistory.ItemClickInterfaceHistory {
 
-    private var binding: ActivitySearchBinding? = null
+    private lateinit var binding: ActivitySearchBinding
 
     private var searchHistory: SearchHistory? = null
 
@@ -65,21 +65,21 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        val view = binding?.root
+        val view = binding.root
         setContentView(view)
 
         val sharedPrefs =
             getSharedPreferences(SettingsActivity.PRACTICUM_EXAMPLE_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPrefs)
 
-        editTextSearch = binding?.editTextSearch
-        clearButton = binding?.imageViewClear
-        goBackButton = binding?.imageViewBackArrow
-        recyclerViewTrackList = binding?.recyclerViewTrackList
-        layoutEmptyResult = binding?.layoutEmptyResult
-        layoutErrorInternetConnection = binding?.layoutNoInternetConnection
-        layoutRecyclerView = binding?.layoutRecyclerView
-        buttonRefresh = binding?.buttonRefresh
+        editTextSearch = binding.editTextSearch
+        clearButton = binding.imageViewClear
+        goBackButton = binding.imageViewBackArrow
+        recyclerViewTrackList = binding.recyclerViewTrackList
+        layoutEmptyResult = binding.layoutEmptyResult
+        layoutErrorInternetConnection = binding.layoutNoInternetConnection
+        layoutRecyclerView = binding.layoutRecyclerView
+        buttonRefresh = binding.buttonRefresh
 
         trackListAdapter = TrackListAdapter()
         trackListAdapter?.setInItemClickListener(this)
@@ -89,11 +89,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         trackListAdapterHistory?.setInItemClickListener(this)
 
         searchHistory?.getTrackList()?.let { trackListAdapterHistory?.setTrackList(it) }
-        binding?.recyclerViewTrackListHistory?.adapter = trackListAdapterHistory
+        binding.recyclerViewTrackListHistory.adapter = trackListAdapterHistory
 
-        binding?.buttonCleanHistory?.setOnClickListener {
+        binding.buttonCleanHistory.setOnClickListener {
             searchHistory?.removeTrackListInSharedPreferences()
-            binding?.layoutSearchHistory?.visibility=View.GONE
+            binding.layoutSearchHistory.visibility=View.GONE
 
         }
 
@@ -129,13 +129,13 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                     Log.d(teg, "TextChangedListener focus - true")
 
                     if(trackListAdapterHistory?.itemCount!=0){
-                        binding?.layoutSearchHistory?.visibility = View.VISIBLE
+                        binding.layoutSearchHistory.visibility = View.VISIBLE
                         layoutRecyclerView?.visibility = View.GONE
                     }
 
                 } else {
                     Log.d(teg, "TextChangedListener focus - false")
-                    binding?.layoutSearchHistory?.visibility = View.GONE
+                    binding.layoutSearchHistory.visibility = View.GONE
                     layoutRecyclerView?.visibility = View.VISIBLE
                 }
             }
@@ -160,7 +160,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
             if (hasFocus && editTextSearch?.text?.isEmpty() == true) {
                 Log.d(teg, "focus - true")
                 if (trackListAdapterHistory?.itemCount!=0){
-                    binding?.layoutSearchHistory?.visibility = View.VISIBLE
+                    binding.layoutSearchHistory.visibility = View.VISIBLE
                     layoutRecyclerView?.visibility = View.GONE
                 }
 
