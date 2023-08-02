@@ -1,6 +1,7 @@
 package com.example.playlistmaker.SearchActivity
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -16,6 +17,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.AudioPlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SettingsActivity
 import com.example.playlistmaker.Track
@@ -59,6 +61,16 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         private const val baseUrl = "https://itunes.apple.com"
         private val trackList = arrayListOf<Track>()
         private const val codeSuccess = 200
+
+        const val trackId = "trackId"
+        const val trackName = "trackName"
+        const val artistName="artistName"
+        const val trackTimeMillis = "trackTimeMillis"
+        const val artworkUrl100 = "artworkUrl100"
+        const val collectionName = "collectionName"
+        const val releaseDate = "releaseDate"
+        const val primaryGenreName = "primaryGenreName"
+        const val country = "country"
     }
 
 
@@ -93,7 +105,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
         binding.buttonCleanHistory.setOnClickListener {
             searchHistory?.removeTrackListInSharedPreferences()
-            binding.layoutSearchHistory.visibility=View.GONE
+            binding.layoutSearchHistory.visibility = View.GONE
 
         }
 
@@ -128,7 +140,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                 if (editTextSearch?.hasFocus() == true && s?.isEmpty() == true) {
                     Log.d(teg, "TextChangedListener focus - true")
 
-                    if(trackListAdapterHistory?.itemCount!=0){
+                    if (trackListAdapterHistory?.itemCount != 0) {
                         binding.layoutSearchHistory.visibility = View.VISIBLE
                         layoutRecyclerView?.visibility = View.GONE
                     }
@@ -159,7 +171,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
             if (hasFocus && editTextSearch?.text?.isEmpty() == true) {
                 Log.d(teg, "focus - true")
-                if (trackListAdapterHistory?.itemCount!=0){
+                if (trackListAdapterHistory?.itemCount != 0) {
                     binding.layoutSearchHistory.visibility = View.VISIBLE
                     layoutRecyclerView?.visibility = View.GONE
                 }
@@ -261,10 +273,51 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         Log.d(teg, "adapterClick ${track.trackId}")
         searchHistory?.writeOneTrack(track)
         searchHistory?.getTrackList()?.let { trackListAdapterHistory?.setTrackList(it) }
+
+        val intent = Intent(
+            this,
+            AudioPlayerActivity::class.java
+        )
+        intent.putExtra(trackId, track.trackId.toString())
+        intent.putExtra(trackName, track.trackName)
+        intent.putExtra(artistName, track.artistName)
+        intent.putExtra(trackTimeMillis, track.trackTimeMillis)
+        intent.putExtra(artworkUrl100, track.artworkUrl100)
+        intent.putExtra(collectionName, track.collectionName)
+        intent.putExtra(releaseDate, track.releaseDate)
+        intent.putExtra(primaryGenreName, track.primaryGenreName)
+        intent.putExtra(country, track.country)
+
+        startActivity(intent)
     }
 
     override fun onItemClickHistory(track: Track) {
         Log.d(teg, "adapterClickHistory ${track.trackId}")
+
+        Log.d(
+            teg,
+            "adapterClickHistory ${Track::trackId.toString()}," +
+                    " ${Track::trackName.toString()}, " +
+                    "${Track::trackTimeMillis.toString()}," +
+                    " ${Track::artworkUrl100.toString()}, " +
+                    "${Track::collectionName.toString()}, ${Track::releaseDate.toString()}," +
+                    " ${Track::primaryGenreName.toString()}, ${Track::country.toString()}"
+        )
+        val intent = Intent(
+            this,
+            AudioPlayerActivity::class.java
+        )
+        intent.putExtra(trackId, track.trackId.toString())
+        intent.putExtra(trackName, track.trackName)
+        intent.putExtra(artistName, track.artistName)
+        intent.putExtra(trackTimeMillis, track.trackTimeMillis)
+        intent.putExtra(artworkUrl100, track.artworkUrl100)
+        intent.putExtra(collectionName, track.collectionName)
+        intent.putExtra(releaseDate, track.releaseDate)
+        intent.putExtra(primaryGenreName, track.primaryGenreName)
+        intent.putExtra(country, track.country)
+
+        startActivity(intent)
     }
 
 }

@@ -3,6 +3,7 @@
     <dimen name="primary_text_size">22sp</dimen>
     <dimen name="settings_text_size">16sp</dimen>
     <dimen name="search_track_item_info_text_size">11sp</dimen>
+    <dimen name="player_text_view_info_text_size">13sp</dimen>
     <dimen name="search_track_button_refresh_text_size">14sp</dimen>
     <dimen name="search_track_text_size">19sp</dimen>
 
@@ -23,4 +24,5 @@
     <dimen name="height_item_view_track">64dp</dimen>
 
     <dimen name="SearchTrackItemArtworkWidthHeight">48dp</dimen>
+    <dimen name="player_small_gray_button_size">48dp</dimen>
 </resources>
