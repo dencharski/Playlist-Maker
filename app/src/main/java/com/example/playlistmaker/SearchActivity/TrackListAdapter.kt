@@ -78,10 +78,7 @@ class TrackListAdapter() :
             itemTrack=track
             trackName.text = track.trackName
             artistName.text = track.artistName
-            trackTime.text = SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(track.trackTimeMillis.toLongOrNull())
+            trackTime.text = track.getTrackTime()
 
 
             Glide.with(itemView)

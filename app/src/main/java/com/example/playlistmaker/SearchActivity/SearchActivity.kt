@@ -62,9 +62,10 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         private val trackList = arrayListOf<Track>()
         private const val codeSuccess = 200
 
+        const val trackKey = "trackKey"
         const val trackId = "trackId"
         const val trackName = "trackName"
-        const val artistName="artistName"
+        const val artistName = "artistName"
         const val trackTimeMillis = "trackTimeMillis"
         const val artworkUrl100 = "artworkUrl100"
         const val collectionName = "collectionName"
@@ -274,50 +275,25 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         searchHistory?.writeOneTrack(track)
         searchHistory?.getTrackList()?.let { trackListAdapterHistory?.setTrackList(it) }
 
-        val intent = Intent(
-            this,
-            AudioPlayerActivity::class.java
-        )
-        intent.putExtra(trackId, track.trackId.toString())
-        intent.putExtra(trackName, track.trackName)
-        intent.putExtra(artistName, track.artistName)
-        intent.putExtra(trackTimeMillis, track.trackTimeMillis)
-        intent.putExtra(artworkUrl100, track.artworkUrl100)
-        intent.putExtra(collectionName, track.collectionName)
-        intent.putExtra(releaseDate, track.releaseDate)
-        intent.putExtra(primaryGenreName, track.primaryGenreName)
-        intent.putExtra(country, track.country)
-
-        startActivity(intent)
+        goToActivity(track)
     }
 
     override fun onItemClickHistory(track: Track) {
         Log.d(teg, "adapterClickHistory ${track.trackId}")
 
-        Log.d(
-            teg,
-            "adapterClickHistory ${Track::trackId.toString()}," +
-                    " ${Track::trackName.toString()}, " +
-                    "${Track::trackTimeMillis.toString()}," +
-                    " ${Track::artworkUrl100.toString()}, " +
-                    "${Track::collectionName.toString()}, ${Track::releaseDate.toString()}," +
-                    " ${Track::primaryGenreName.toString()}, ${Track::country.toString()}"
-        )
+
+        goToActivity(track)
+    }
+
+    private fun goToActivity(track: Track) {
         val intent = Intent(
             this,
             AudioPlayerActivity::class.java
         )
-        intent.putExtra(trackId, track.trackId.toString())
-        intent.putExtra(trackName, track.trackName)
-        intent.putExtra(artistName, track.artistName)
-        intent.putExtra(trackTimeMillis, track.trackTimeMillis)
-        intent.putExtra(artworkUrl100, track.artworkUrl100)
-        intent.putExtra(collectionName, track.collectionName)
-        intent.putExtra(releaseDate, track.releaseDate)
-        intent.putExtra(primaryGenreName, track.primaryGenreName)
-        intent.putExtra(country, track.country)
 
-        startActivity(intent)
+        intent.putExtra(trackKey, track)
+
+        startActivity (intent)
     }
 
 }
