@@ -25,4 +25,9 @@
     <string name="empty_result_text">Ничего не нашлось</string>
     <string name="you_search">Вы искали</string>
     <string name="clean_history">Очистить историю</string>
+    <string name="collection_name_label">Альбом</string>
+    <string name="release_date_label">Год</string>
+    <string name="primary_genre_name_label">Жанр</string>
+    <string name="country_label">Страна</string>
+    <string name="track_time_label">Длительность</string>
 </resources>
