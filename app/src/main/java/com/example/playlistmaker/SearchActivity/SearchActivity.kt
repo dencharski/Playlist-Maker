@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,7 +20,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.AudioPlayerActivity
-import com.example.playlistmaker.R
 import com.example.playlistmaker.SettingsActivity
 import com.example.playlistmaker.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -29,6 +30,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 
 class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     TrackListAdapterHistory.ItemClickInterfaceHistory {
@@ -54,6 +56,9 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         .build()
     private val iTunesSearchInterface = retrofit.create(ITunesSearchInterface::class.java)
 
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+
 
     companion object {
         private const val teg = "SearchActivity"
@@ -61,17 +66,12 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         private const val baseUrl = "https://itunes.apple.com"
         private val trackList = arrayListOf<Track>()
         private const val codeSuccess = 200
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+
 
         const val trackKey = "trackKey"
-        const val trackId = "trackId"
-        const val trackName = "trackName"
-        const val artistName = "artistName"
-        const val trackTimeMillis = "trackTimeMillis"
-        const val artworkUrl100 = "artworkUrl100"
-        const val collectionName = "collectionName"
-        const val releaseDate = "releaseDate"
-        const val primaryGenreName = "primaryGenreName"
-        const val country = "country"
+
     }
 
 
@@ -123,7 +123,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         }
         goBackButton?.setOnClickListener { finish() }
 
-        buttonRefresh?.setOnClickListener { searchTrack(editTextSearch?.text.toString()) }
+        buttonRefresh?.setOnClickListener { searchTrack() }
 
         editTextSearch?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -135,6 +135,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                     clearButton?.visibility = View.GONE
                     trackListAdapter?.setTrackList(arrayListOf())
                 } else {
+                    searchDebounce()
                     clearButton?.visibility = View.VISIBLE
                 }
 
@@ -161,7 +162,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         editTextSearch?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                searchTrack(editTextSearch?.text.toString())
+                searchTrack()
 
                 true
             }
@@ -183,40 +184,47 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
             }
         }
     }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+    private val searchRunnable = Runnable { searchTrack() }
+    private fun searchTrack() {
 
-    private fun searchTrack(text: String) {
-
-        getNewRequest()
+        Log.d(teg, "searchTrack: ${editTextSearch?.text.toString()}")
+        showStartNewRequest()
 
         iTunesSearchInterface
-            .search(text)
+            .search(editTextSearch?.text.toString())
             .enqueue(object : Callback<ResponseModel> {
                 override fun onResponse(
                     call: Call<ResponseModel>,
                     response: Response<ResponseModel>
                 ) {
-                    Log.d("TRANSLATION_LOG", "Status code: ${response.code()}")
+                    Log.d(teg, "Status code: ${response.code()}")
 
                     if (response.code() == codeSuccess) {
 
                         if (response.body()?.results?.size != 0) {
                             Log.d(
-                                "TRANSLATION_LOG",
+                                teg,
                                 "response.body()?.results?.size: ${response.body()?.results?.size}"
                             )
                             response.body()?.results?.forEach {
                                 Log.d(
-                                    "TRANSLATION_LOG",
-                                    " item: ${it.trackName}, ${it.artistName}, ${it.trackTimeMillis.toLongOrNull()}, ${it.artworkUrl100}"
+                                    teg,
+                                    " item: ${it.trackName}, ${it.artistName}, ${it.trackTimeMillis.toLongOrNull()}, ${it.artworkUrl100}, ${it.previewUrl}"
                                 )
                             }
 
                             trackList.clear()
                             response.body()?.results?.let { trackList.addAll(it) }
                             trackListAdapter?.setTrackList(trackList)
+                            showSuccessfulResult()
+
                         } else {
                             Log.d(
-                                "TRANSLATION_LOG",
+                                teg,
                                 "response.body()?.results?.size == 0: ${response.body()?.results?.size}"
                             )
 
@@ -224,14 +232,14 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
                         }
                     } else {
-                        Log.d("TRANSLATION_LOG", "Trouble status code: ${response.code()}")
+                        Log.d(teg, "Trouble status code: ${response.code()}")
                         showErrorResult()
                     }
 
                 }
 
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                    Log.d("TRANSLATION_LOG", "Trouble status code: ${t.message}")
+                    Log.d(teg, "Trouble status code: ${t.message}")
                     showErrorResult()
                 }
 
@@ -239,22 +247,30 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
     }
 
-    private fun getNewRequest() {
+    private fun showSuccessfulResult() {
         layoutEmptyResult?.visibility = View.GONE
         layoutErrorInternetConnection?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.VISIBLE
+        binding.frameLayoutProgressbar.visibility=View.GONE
     }
-
+    private fun showStartNewRequest() {
+        layoutEmptyResult?.visibility = View.GONE
+        layoutErrorInternetConnection?.visibility = View.GONE
+        layoutRecyclerView?.visibility = View.GONE
+        binding.frameLayoutProgressbar.visibility=View.VISIBLE
+    }
     private fun showEmptyResult() {
         layoutEmptyResult?.visibility = View.VISIBLE
         layoutErrorInternetConnection?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.GONE
+        binding.frameLayoutProgressbar.visibility=View.GONE
     }
 
     private fun showErrorResult() {
         layoutErrorInternetConnection?.visibility = View.VISIBLE
         layoutEmptyResult?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.GONE
+        binding.frameLayoutProgressbar.visibility=View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -272,17 +288,23 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
     override fun onItemClick(track: Track) {
         Log.d(teg, "adapterClick ${track.trackId}")
-        searchHistory?.writeOneTrack(track)
-        searchHistory?.getTrackList()?.let { trackListAdapterHistory?.setTrackList(it) }
+        if (clickDebounce()) {
+            Log.d(teg, "adapterClick ${track.trackId}, clickDebounce")
+            searchHistory?.writeOneTrack(track)
+            searchHistory?.getTrackList()?.let { trackListAdapterHistory?.setTrackList(it) }
 
-        goToActivity(track)
+            goToActivity(track)
+        }
     }
 
     override fun onItemClickHistory(track: Track) {
         Log.d(teg, "adapterClickHistory ${track.trackId}")
+        if (clickDebounce()) {
+            Log.d(teg, "adapterClickHistory ${track.trackId}, clickDebounce")
+            goToActivity(track)
+        }
 
 
-        goToActivity(track)
     }
 
     private fun goToActivity(track: Track) {
@@ -293,7 +315,16 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
         intent.putExtra(trackKey, track)
 
-        startActivity (intent)
+        startActivity(intent)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
 }
