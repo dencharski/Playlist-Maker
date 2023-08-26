@@ -66,8 +66,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         private const val baseUrl = "https://itunes.apple.com"
         private val trackList = arrayListOf<Track>()
         private const val codeSuccess = 200
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 
 
         const val trackKey = "trackKey"
@@ -186,7 +186,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     }
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
     private val searchRunnable = Runnable { searchTrack() }
     private fun searchTrack() {
@@ -322,7 +322,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
     }
