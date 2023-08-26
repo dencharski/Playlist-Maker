@@ -105,7 +105,7 @@
         android:id="@+id/layout_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:visibility="gone"
         >
 
         <androidx.recyclerview.widget.RecyclerView
@@ -183,8 +183,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_view_you_search"
@@ -212,4 +211,21 @@
             android:layout_weight="0"
             android:text="@string/clean_history" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_layout_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <ProgressBar
+            android:id="@+id/progressbar_search"
+            android:layout_width="@dimen/search_track_progressbar_size"
+            android:layout_height="@dimen/search_track_progressbar_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/player_small_gray_button_size"
+            android:indeterminateTint="@color/main_background_color"
+            />
+    </FrameLayout>
 </LinearLayout>

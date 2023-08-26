@@ -109,6 +109,20 @@
         app:layout_constraintTop_toBottomOf="@+id/text_view_artist_name" />
 
     <ImageButton
+        android:id="@+id/image_button_pause_track"
+        style="@style/PlayerButtonPlayTrackStyle"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="@dimen/margin_settings_menu_top"
+        android:background="@drawable/round_button"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_pause_24"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_artist_name"
+        android:visibility="invisible"
+        />
+    <ImageButton
         android:id="@+id/image_button_like_it"
         android:layout_width="@dimen/player_small_gray_button_size"
         android:layout_height="@dimen/player_small_gray_button_size"
