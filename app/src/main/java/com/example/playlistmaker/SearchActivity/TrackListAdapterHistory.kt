@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.TrackItemBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -18,7 +18,7 @@ import java.util.Locale
 class TrackListAdapterHistory:
     RecyclerView.Adapter<TrackListAdapterHistory.TrackViewHolder>() {
 
-    private var trackList = arrayListOf<Track>()
+    private var trackList = arrayListOf<TrackDtoApp>()
 
     private var itemClickListener: ItemClickInterfaceHistory? = null
 
@@ -45,13 +45,13 @@ class TrackListAdapterHistory:
         holder.bind(trackList[position])
     }
 
-    fun setTrackList(trackList: ArrayList<Track>) {
+    fun setTrackList(trackList: ArrayList<TrackDtoApp>) {
         this.trackList = trackList
         notifyDataSetChanged()
     }
 
     interface ItemClickInterfaceHistory {
-        fun onItemClickHistory(track: Track)
+        fun onItemClickHistory(track: TrackDtoApp)
     }
 
     fun setInItemClickListener(itemClickListener: ItemClickInterfaceHistory) {
@@ -67,14 +67,14 @@ class TrackListAdapterHistory:
         private val artistName: TextView = binding.textViewArtistName
         private val trackTime: TextView = binding.textViewTrackTime
         private val artworkImageView: ImageView = binding.imageViewArtwork
-        private var itemTrack: Track?=null
+        private var itemTrackDtoApp: TrackDtoApp?=null
 
         init {
-            itemView.setOnClickListener { itemTrack?.let { it1 -> itemClickListener?.onItemClickHistory(it1) } }
+            itemView.setOnClickListener { itemTrackDtoApp?.let { it1 -> itemClickListener?.onItemClickHistory(it1) } }
         }
 
-        fun bind(track: Track) {
-            itemTrack=track
+        fun bind(track: TrackDtoApp) {
+            itemTrackDtoApp=track
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text = SimpleDateFormat(

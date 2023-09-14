@@ -1,14 +1,15 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.AudioPlayerActivity.domain.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import com.example.playlistmaker.TrackDtoApp
 import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Parcelize
-data class Track(
+data class TrackDto(
     val trackId: Long,
     val trackName: String = "",
     val artistName: String = "",
@@ -19,10 +20,12 @@ data class Track(
     val primaryGenreName: String = "",
     val country: String = "",
     val previewUrl:String =""
-) : Parcelable {
+): Parcelable {
 
     val artworkUrl512
         get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+
+
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -42,9 +45,9 @@ data class Track(
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLongOrNull())
     }
 
-    companion object : Parceler<Track> {
+    companion object : Parceler<TrackDto> {
 
-        override fun Track.write(parcel: Parcel, flags: Int) {
+        override fun TrackDto.write(parcel: Parcel, flags: Int) {
             parcel.writeLong(trackId)
             parcel.writeString(trackName)
             parcel.writeString(artistName)
@@ -57,11 +60,9 @@ data class Track(
             parcel.writeString(previewUrl)
         }
 
-        override fun create(parcel: Parcel): Track {
-            return Track(parcel)
+        override fun create(parcel: Parcel): TrackDto {
+            return TrackDto(parcel)
         }
     }
 
 }
-
-

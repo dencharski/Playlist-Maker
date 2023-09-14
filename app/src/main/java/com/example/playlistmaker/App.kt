@@ -7,6 +7,9 @@ class App:Application() {
 
     var darkTheme = false
 
+    companion object{
+        const val trackKey = "trackKey"
+    }
     override fun onCreate() {
         super.onCreate()
     }

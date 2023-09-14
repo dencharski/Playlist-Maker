@@ -19,9 +19,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.AudioPlayerActivity
+import com.example.playlistmaker.App
+import com.example.playlistmaker.AudioPlayerActivity.domain.models.TrackDto
+import com.example.playlistmaker.AudioPlayerActivity.ui.AudioPlayerActivity
 import com.example.playlistmaker.SettingsActivity
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.internet.ITunesSearchInterface
 import com.example.playlistmaker.internet.ResponseModel
@@ -64,13 +66,10 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         private const val teg = "SearchActivity"
         private const val key: String = "key"
         private const val baseUrl = "https://itunes.apple.com"
-        private val trackList = arrayListOf<Track>()
+        private val trackList = arrayListOf<TrackDtoApp>()
         private const val codeSuccess = 200
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
-
-
-        const val trackKey = "trackKey"
 
     }
 
@@ -184,10 +183,12 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
             }
         }
     }
+
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
+
     private val searchRunnable = Runnable { searchTrack() }
     private fun searchTrack() {
 
@@ -251,26 +252,28 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         layoutEmptyResult?.visibility = View.GONE
         layoutErrorInternetConnection?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.VISIBLE
-        binding.frameLayoutProgressbar.visibility=View.GONE
+        binding.frameLayoutProgressbar.visibility = View.GONE
     }
+
     private fun showStartNewRequest() {
         layoutEmptyResult?.visibility = View.GONE
         layoutErrorInternetConnection?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.GONE
-        binding.frameLayoutProgressbar.visibility=View.VISIBLE
+        binding.frameLayoutProgressbar.visibility = View.VISIBLE
     }
+
     private fun showEmptyResult() {
         layoutEmptyResult?.visibility = View.VISIBLE
         layoutErrorInternetConnection?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.GONE
-        binding.frameLayoutProgressbar.visibility=View.GONE
+        binding.frameLayoutProgressbar.visibility = View.GONE
     }
 
     private fun showErrorResult() {
         layoutErrorInternetConnection?.visibility = View.VISIBLE
         layoutEmptyResult?.visibility = View.GONE
         layoutRecyclerView?.visibility = View.GONE
-        binding.frameLayoutProgressbar.visibility=View.GONE
+        binding.frameLayoutProgressbar.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -286,7 +289,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         editTextSearch?.setText(savedInstanceState?.getString(key))
     }
 
-    override fun onItemClick(track: Track) {
+    override fun onItemClick(track: TrackDtoApp) {
         Log.d(teg, "adapterClick ${track.trackId}")
         if (clickDebounce()) {
             Log.d(teg, "adapterClick ${track.trackId}, clickDebounce")
@@ -297,7 +300,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         }
     }
 
-    override fun onItemClickHistory(track: Track) {
+    override fun onItemClickHistory(track: TrackDtoApp) {
         Log.d(teg, "adapterClickHistory ${track.trackId}")
         if (clickDebounce()) {
             Log.d(teg, "adapterClickHistory ${track.trackId}, clickDebounce")
@@ -307,13 +310,24 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
     }
 
-    private fun goToActivity(track: Track) {
+    private fun goToActivity(track: TrackDtoApp) {
         val intent = Intent(
             this,
             AudioPlayerActivity::class.java
         )
-
-        intent.putExtra(trackKey, track)
+        val trackDto = TrackDto(
+            track.trackId,
+            track.trackName,
+            track.artistName,
+            track.trackTimeMillis,
+            track.artworkUrl100,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
+        )
+        intent.putExtra(App.trackKey, trackDto)
 
         startActivity(intent)
     }

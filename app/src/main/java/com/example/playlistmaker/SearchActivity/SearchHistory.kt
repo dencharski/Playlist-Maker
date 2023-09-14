@@ -2,12 +2,12 @@ package com.example.playlistmaker.SearchActivity
 
 import android.content.SharedPreferences
 import android.util.Log
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.TrackDtoApp
 import com.google.gson.Gson
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
-    private val trackList = arrayListOf<Track>()
+    private val trackList = arrayListOf<TrackDtoApp>()
     private val trackListId = arrayListOf<Long>()
 
     companion object {
@@ -23,27 +23,27 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         Log.d(teg, "init ${trackListId.size}")
     }
 
-    fun writeOneTrack(track: Track) {
+    fun writeOneTrack(track: TrackDtoApp) {
 
-        val fTrack = arrayListOf<Track>()
+        val fTrackDtoApp = arrayListOf<TrackDtoApp>()
         if (trackListId.contains(track.trackId)) {
-            fTrack.add(track)
+            fTrackDtoApp.add(track)
             trackList.forEach {
                 if (it.trackId != track.trackId) {
-                    fTrack.add(it)
+                    fTrackDtoApp.add(it)
                 }
             }
 
         } else {
-            fTrack.add(track)
-            fTrack.addAll(trackList)
+            fTrackDtoApp.add(track)
+            fTrackDtoApp.addAll(trackList)
         }
-        val ar = fTrack.take(capacity)
-        fTrack.clear()
-        fTrack.addAll(ar)
-        Log.d(teg, "fTrack ${fTrack.size}")
+        val ar = fTrackDtoApp.take(capacity)
+        fTrackDtoApp.clear()
+        fTrackDtoApp.addAll(ar)
+        Log.d(teg, "fTrack ${fTrackDtoApp.size}")
 
-        writeArray(fTrack)
+        writeArray(fTrackDtoApp)
 
         trackList.clear()
         trackList.addAll(read())
@@ -59,7 +59,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         trackList.forEach { trackListId.add(it.trackId) }
     }
 
-    private fun writeArray(tracks: ArrayList<Track>) {
+    private fun writeArray(tracks: ArrayList<TrackDtoApp>) {
         removeTrackListInSharedPreferences()
         val json = Gson().toJson(tracks)
         sharedPreferences.edit()
@@ -68,9 +68,9 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         Log.d(teg, "Записали значение ${tracks.size}")
     }
 
-    private fun read(): Array<Track> {
+    private fun read(): Array<TrackDtoApp> {
         val json = sharedPreferences.getString(USER_LIST_KEY, null) ?: return emptyArray()
-        return Gson().fromJson(json, Array<Track>::class.java)
+        return Gson().fromJson(json, Array<TrackDtoApp>::class.java)
 
     }
 
