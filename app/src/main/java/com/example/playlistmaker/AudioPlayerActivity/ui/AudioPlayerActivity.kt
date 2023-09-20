@@ -1,30 +1,32 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.AudioPlayerActivity.ui
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.postDelayed
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.SearchActivity.SearchActivity
+import com.example.playlistmaker.AudioPlayerActivity.domain.api.AudioPlayerInteractorInterface
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private var binding: ActivityAudioplayerBinding?=null
-    private var track: Track?=null
+    private var binding: ActivityAudioplayerBinding? = null
+    private var track: TrackDtoApp? = null
 
-    private var mediaPlayer = MediaPlayer()
+    private var mediaPlayer: MediaPlayer? = null
+    private var audioPlayerInteractorImpl: AudioPlayerInteractorInterface? = null
     private val handler = Handler(Looper.getMainLooper())
 
     private val runnable = object : Runnable {
@@ -46,10 +48,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         private const val STATE_PAUSED = 3
 
         private const val ZERO_VAL = "00:00"
-        private const val teg = "SearchActivity"
+
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,16 +59,19 @@ class AudioPlayerActivity : AppCompatActivity() {
         val view = binding?.root
         setContentView(view)
 
-        Log.d(teg, "onCreate")
-        binding?.imageButtonPlayTrack?.isEnabled = false
 
+        binding?.imageButtonPlayTrack?.isEnabled = false
         binding?.imageViewBackArrow?.setOnClickListener {
             finish()
         }
 
-        val extras = intent.extras
-        if (extras != null) {
-            track = extras.getParcelable<Track>(SearchActivity.trackKey)!!
+        audioPlayerInteractorImpl = Creator.getAudioPlayerInteractor()
+
+        mediaPlayer = audioPlayerInteractorImpl?.getPlayer()
+
+        track = audioPlayerInteractorImpl?.getDataExtrasTrack(intent)
+
+        if (track != null) {
             setViews()
         }
 
@@ -83,19 +88,19 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        Log.d(teg, "track.previewUrl = ${track?.previewUrl}")
+
         if (track?.previewUrl?.isNotEmpty() == true) {
 
-            mediaPlayer.setDataSource(track?.previewUrl)
+            mediaPlayer?.setDataSource(track?.previewUrl)
 
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
+            mediaPlayer?.prepareAsync()
+            mediaPlayer?.setOnPreparedListener {
                 binding?.imageButtonPlayTrack?.isEnabled = true
                 playerState = STATE_PREPARED
             }
-            mediaPlayer.setOnCompletionListener {
-                binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
-                binding?.imageButtonPauseTrack?.visibility=View.INVISIBLE
+            mediaPlayer?.setOnCompletionListener {
+                binding?.imageButtonPlayTrack?.isVisible = true
+                binding?.imageButtonPauseTrack?.isVisible = false
                 playerState = STATE_PREPARED
 
                 stopTimer()
@@ -106,9 +111,9 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
-        binding?.imageButtonPlayTrack?.visibility = View.INVISIBLE
-        binding?.imageButtonPauseTrack?.visibility = View.VISIBLE
+        mediaPlayer?.start()
+        binding?.imageButtonPlayTrack?.isVisible= false
+        binding?.imageButtonPauseTrack?.isVisible = true
         playerState = STATE_PLAYING
 
         handler.postDelayed(runnable, REFRESH_LIST_DELAY_MILLIS)
@@ -116,9 +121,9 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
-        binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
-        binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
+        mediaPlayer?.pause()
+        binding?.imageButtonPlayTrack?.isVisible = true
+        binding?.imageButtonPauseTrack?.isVisible = false
         playerState = STATE_PAUSED
 
         stopTimer()
@@ -142,7 +147,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun getCoverArtwork() = track?.artworkUrl512
 
-
     private fun setViews() {
         binding?.imageViewArtworkUrl?.let {
             Glide.with(this)
@@ -157,7 +161,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding?.textViewTrackName?.text = track?.trackName
         binding?.textViewArtistName?.text = track?.artistName
-        binding?.textViewTrackTime?.text = track?.getTrackTime()
+        binding?.textViewTrackTime?.text = track?.trackTimeMillis
         binding?.textViewCollectionName?.text = track?.collectionName
         binding?.textViewReleaseDate?.text = track?.releaseDate
         binding?.textViewPrimaryGenreName?.text = track?.primaryGenreName
@@ -170,7 +174,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding?.textViewTrackTimeNowPlay?.text = SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
-        ).format(mediaPlayer.currentPosition)
+        ).format(mediaPlayer?.currentPosition)
     }
 
     private fun dpToPx(dp: Float, context: Context): Int {
@@ -188,7 +192,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mediaPlayer?.release()
         stopTimer()
     }
 }

@@ -1,10 +1,10 @@
 package com.example.playlistmaker.internet
 
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.TrackDtoApp
 
 data class ResponseModel(
     val resultCount: String,
-    val results: ArrayList <Track>
+    val results: ArrayList <TrackDtoApp>
 ) {
 
 

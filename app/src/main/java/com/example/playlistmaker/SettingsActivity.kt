@@ -16,7 +16,7 @@ class SettingsActivity : AppCompatActivity() {
 
     companion object{
         const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"
-        const val EDIT_TEXT_KEY = "key_for_edit_text"
+
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
