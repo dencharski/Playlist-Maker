@@ -192,7 +192,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     private val searchRunnable = Runnable { searchTrack() }
     private fun searchTrack() {
 
-        Log.d(teg, "searchTrack: ${editTextSearch?.text.toString()}")
         showStartNewRequest()
 
         iTunesSearchInterface
@@ -207,16 +206,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                     if (response.code() == codeSuccess) {
 
                         if (response.body()?.results?.size != 0) {
-                            Log.d(
-                                teg,
-                                "response.body()?.results?.size: ${response.body()?.results?.size}"
-                            )
-                            response.body()?.results?.forEach {
-                                Log.d(
-                                    teg,
-                                    " item: ${it.trackName}, ${it.artistName}, ${it.trackTimeMillis.toLongOrNull()}, ${it.artworkUrl100}, ${it.previewUrl}"
-                                )
-                            }
 
                             trackList.clear()
                             response.body()?.results?.let { trackList.addAll(it) }
@@ -224,16 +213,9 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                             showSuccessfulResult()
 
                         } else {
-                            Log.d(
-                                teg,
-                                "response.body()?.results?.size == 0: ${response.body()?.results?.size}"
-                            )
-
                             showEmptyResult()
-
                         }
                     } else {
-                        Log.d(teg, "Trouble status code: ${response.code()}")
                         showErrorResult()
                     }
 
@@ -290,9 +272,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     }
 
     override fun onItemClick(track: TrackDtoApp) {
-        Log.d(teg, "adapterClick ${track.trackId}")
         if (clickDebounce()) {
-            Log.d(teg, "adapterClick ${track.trackId}, clickDebounce")
             searchHistory?.writeOneTrack(track)
             searchHistory?.getTrackList()?.let { trackListAdapterHistory?.setTrackList(it) }
 
@@ -301,13 +281,9 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     }
 
     override fun onItemClickHistory(track: TrackDtoApp) {
-        Log.d(teg, "adapterClickHistory ${track.trackId}")
         if (clickDebounce()) {
-            Log.d(teg, "adapterClickHistory ${track.trackId}, clickDebounce")
             goToActivity(track)
         }
-
-
     }
 
     private fun goToActivity(track: TrackDtoApp) {

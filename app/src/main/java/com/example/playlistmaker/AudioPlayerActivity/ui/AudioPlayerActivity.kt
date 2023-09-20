@@ -9,6 +9,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.AudioPlayerActivity.domain.api.AudioPlayerInteractorInterface
@@ -47,7 +48,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         private const val STATE_PAUSED = 3
 
         private const val ZERO_VAL = "00:00"
-        private const val teg = "SearchActivity"
+
     }
 
 
@@ -58,7 +59,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         val view = binding?.root
         setContentView(view)
 
-        Log.d(teg, "onCreate")
+
         binding?.imageButtonPlayTrack?.isEnabled = false
         binding?.imageViewBackArrow?.setOnClickListener {
             finish()
@@ -87,7 +88,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        Log.d(teg, "track.previewUrl = ${track?.previewUrl}")
+
         if (track?.previewUrl?.isNotEmpty() == true) {
 
             mediaPlayer?.setDataSource(track?.previewUrl)
@@ -98,8 +99,8 @@ class AudioPlayerActivity : AppCompatActivity() {
                 playerState = STATE_PREPARED
             }
             mediaPlayer?.setOnCompletionListener {
-                binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
-                binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
+                binding?.imageButtonPlayTrack?.isVisible = true
+                binding?.imageButtonPauseTrack?.isVisible = false
                 playerState = STATE_PREPARED
 
                 stopTimer()
@@ -111,8 +112,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer?.start()
-        binding?.imageButtonPlayTrack?.visibility = View.INVISIBLE
-        binding?.imageButtonPauseTrack?.visibility = View.VISIBLE
+        binding?.imageButtonPlayTrack?.isVisible= false
+        binding?.imageButtonPauseTrack?.isVisible = true
         playerState = STATE_PLAYING
 
         handler.postDelayed(runnable, REFRESH_LIST_DELAY_MILLIS)
@@ -121,8 +122,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun pausePlayer() {
         mediaPlayer?.pause()
-        binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
-        binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
+        binding?.imageButtonPlayTrack?.isVisible = true
+        binding?.imageButtonPauseTrack?.isVisible = false
         playerState = STATE_PAUSED
 
         stopTimer()
@@ -155,7 +156,7 @@ class AudioPlayerActivity : AppCompatActivity() {
                 .transform(RoundedCorners(dpToPx(cornerRadius, this)))
                 .into(it)
         }
-        Log.d(teg, "trackName= ${track?.trackName}")
+
 
 
         binding?.textViewTrackName?.text = track?.trackName

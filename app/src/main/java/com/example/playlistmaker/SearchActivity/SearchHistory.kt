@@ -25,25 +25,25 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     fun writeOneTrack(track: TrackDtoApp) {
 
-        val fTrackDtoApp = arrayListOf<TrackDtoApp>()
+        val arrayListOfTrackDtoApp = arrayListOf<TrackDtoApp>()
         if (trackListId.contains(track.trackId)) {
-            fTrackDtoApp.add(track)
+            arrayListOfTrackDtoApp.add(track)
             trackList.forEach {
                 if (it.trackId != track.trackId) {
-                    fTrackDtoApp.add(it)
+                    arrayListOfTrackDtoApp.add(it)
                 }
             }
 
         } else {
-            fTrackDtoApp.add(track)
-            fTrackDtoApp.addAll(trackList)
+            arrayListOfTrackDtoApp.add(track)
+            arrayListOfTrackDtoApp.addAll(trackList)
         }
-        val ar = fTrackDtoApp.take(capacity)
-        fTrackDtoApp.clear()
-        fTrackDtoApp.addAll(ar)
-        Log.d(teg, "fTrack ${fTrackDtoApp.size}")
+        val ar = arrayListOfTrackDtoApp.take(capacity)
+        arrayListOfTrackDtoApp.clear()
+        arrayListOfTrackDtoApp.addAll(ar)
+        Log.d(teg, "fTrack ${arrayListOfTrackDtoApp.size}")
 
-        writeArray(fTrackDtoApp)
+        writeArray(arrayListOfTrackDtoApp)
 
         trackList.clear()
         trackList.addAll(read())

@@ -27,7 +27,6 @@ class TrackListAdapterHistory:
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        //return TrackViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false))
 
         return TrackViewHolder(
             TrackItemBinding.inflate(
