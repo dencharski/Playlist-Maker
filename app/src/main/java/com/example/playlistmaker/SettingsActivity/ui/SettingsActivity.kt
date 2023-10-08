@@ -1,34 +1,44 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.SettingsActivity.ui
 
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageView
-import android.widget.LinearLayout
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SettingsActivity.data.dto.SettingsViewState
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var binding:ActivitySettingsBinding?=null
+    private lateinit var binding: ActivitySettingsBinding
+    private var settingsViewModel: SettingsViewModel? = null
 
-    companion object{
+    companion object {
         const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"
-
-
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        val view = binding?.root
+        val view = binding.root
         setContentView(view)
 
+        settingsViewModel =
+            ViewModelProvider(
+                this,
+                SettingsViewModel.getViewModelFactory()
+            )[SettingsViewModel::class.java]
 
-        binding?.imageViewBackArrow?.setOnClickListener { finish() }
+        observeValues()
 
-        binding?.layoutSharedApp?.setOnClickListener {
+        binding.switchDarkTheme.setOnCheckedChangeListener { _, checked ->
+            settingsViewModel?.setIsDarkTheme(checked)
+        }
+
+        binding.imageViewBackArrow.setOnClickListener { finish() }
+
+        binding.layoutSharedApp.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
             intent.type = getString(R.string.intent_type)
@@ -39,19 +49,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        if ((applicationContext as App).darkTheme){
-            binding?.switchDarkTheme?.isChecked=true
-            Log.d("DarkTheme","true")
-        }else{
-            binding?.switchDarkTheme?.isChecked=false
-            Log.d("DarkTheme","false")
-        }
-
-        binding?.switchDarkTheme?.setOnCheckedChangeListener{ switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-        }
-
-        binding?.layoutWriteSupport?.setOnClickListener {
+        binding.layoutWriteSupport.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SENDTO
             intent.data = Uri.parse(getString(R.string.url_string))
@@ -67,12 +65,22 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding?.layoutUserAgreement?.setOnClickListener {
+        binding.layoutUserAgreement.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.data = Uri.parse(getString(R.string.practicum_offer))
             startActivity(intent)
 
+        }
+    }
+
+    private fun observeValues() {
+        settingsViewModel?.isDarkTheme?.observe(this) {
+            when (it) {
+                SettingsViewState.Dark -> binding.switchDarkTheme.isChecked = true
+                SettingsViewState.Light -> binding.switchDarkTheme.isChecked = false
+            }
+             
         }
     }
 }

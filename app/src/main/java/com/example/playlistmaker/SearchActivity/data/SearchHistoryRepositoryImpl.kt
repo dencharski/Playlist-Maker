@@ -1,11 +1,13 @@
-package com.example.playlistmaker.SearchActivity
+package com.example.playlistmaker.SearchActivity.data
 
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.playlistmaker.SearchActivity.domain.api.SearchHistoryRepositoryInterface
 import com.example.playlistmaker.TrackDtoApp
 import com.google.gson.Gson
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) {
+class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+    SearchHistoryRepositoryInterface {
 
     private val trackList = arrayListOf<TrackDtoApp>()
     private val trackListId = arrayListOf<Long>()
@@ -23,7 +25,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         Log.d(teg, "init ${trackListId.size}")
     }
 
-    fun writeOneTrack(track: TrackDtoApp) {
+    override fun writeOneTrack(track: TrackDtoApp) {
 
         val arrayListOfTrackDtoApp = arrayListOf<TrackDtoApp>()
         if (trackListId.contains(track.trackId)) {
@@ -51,8 +53,16 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     }
 
-    fun getTrackList() = trackList
+    override fun getTrackList() = trackList
 
+    override fun removeTrackListInSharedPreferences() {
+        sharedPreferences.edit()
+            .remove(USER_LIST_KEY)
+            .apply()
+        trackList.clear()
+        trackListId.clear()
+        Log.d(teg, "remove sharedPreferences.size = ${read().size}")
+    }
 
     private fun addListId() {
         trackListId.clear()
@@ -74,12 +84,5 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     }
 
-    fun removeTrackListInSharedPreferences() {
-        sharedPreferences.edit()
-            .remove(USER_LIST_KEY)
-            .apply()
-        trackList.clear()
-        trackListId.clear()
-        Log.d(teg, "remove sharedPreferences.size = ${read().size}")
-    }
+
 }

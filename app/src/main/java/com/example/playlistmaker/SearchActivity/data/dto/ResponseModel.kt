@@ -1,4 +1,4 @@
-package com.example.playlistmaker.internet
+package com.example.playlistmaker.SearchActivity.data.dto
 
 import com.example.playlistmaker.TrackDtoApp
 

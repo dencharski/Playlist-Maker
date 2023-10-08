@@ -1,4 +1,4 @@
-package com.example.playlistmaker.SearchActivity
+package com.example.playlistmaker.SearchActivity.ui
 
 import android.content.Context
 import android.util.TypedValue
@@ -12,13 +12,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.TrackItemBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TrackListAdapter() :
-    RecyclerView.Adapter<TrackListAdapter.TrackViewHolder>() {
+class TrackListAdapterHistory:
+    RecyclerView.Adapter<TrackListAdapterHistory.TrackViewHolder>() {
 
     private var trackList = arrayListOf<TrackDtoApp>()
 
-    private var itemClickListener: ItemClickInterface? = null
+    private var itemClickListener: ItemClickInterfaceHistory? = null
 
     companion object {
         const val cornerRadius: Float = 2f
@@ -47,34 +49,37 @@ class TrackListAdapter() :
         notifyDataSetChanged()
     }
 
-    interface ItemClickInterface {
-        fun onItemClick(track:TrackDtoApp)
+    interface ItemClickInterfaceHistory {
+        fun onItemClickHistory(track: TrackDtoApp)
     }
 
-    fun setInItemClickListener(itemClickListener: ItemClickInterface) {
+    fun setInItemClickListener(itemClickListener: ItemClickInterfaceHistory) {
         this.itemClickListener = itemClickListener
     }
 
     class TrackViewHolder(
         binding: TrackItemBinding,
-        private val itemClickListener: ItemClickInterface?
+        private val itemClickListener: ItemClickInterfaceHistory?
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val trackName: TextView = binding.textViewTrackName
         private val artistName: TextView = binding.textViewArtistName
         private val trackTime: TextView = binding.textViewTrackTime
         private val artworkImageView: ImageView = binding.imageViewArtwork
-        private var itemTrackDtoApp:TrackDtoApp?=null
+        private var itemTrackDtoApp: TrackDtoApp?=null
 
         init {
-            itemView.setOnClickListener { itemTrackDtoApp?.let { it1 -> itemClickListener?.onItemClick(it1) } }
+            itemView.setOnClickListener { itemTrackDtoApp?.let { it1 -> itemClickListener?.onItemClickHistory(it1) } }
         }
 
         fun bind(track: TrackDtoApp) {
             itemTrackDtoApp=track
             trackName.text = track.trackName
             artistName.text = track.artistName
-            trackTime.text = track.getTrackTime()
+            trackTime.text = SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(track.trackTimeMillis.toLongOrNull())
 
 
             Glide.with(itemView)
