@@ -62,6 +62,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
         trackListAdapterHistory = TrackListAdapterHistory()
         trackListAdapterHistory?.setInItemClickListener(this)
+        trackListAdapterHistory?.setTrackList(trackListHistory)
 
         observeViewModelState()
 
