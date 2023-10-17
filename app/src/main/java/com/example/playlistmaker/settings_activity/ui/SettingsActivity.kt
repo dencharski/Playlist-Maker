@@ -8,16 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.settings_activity.data.dto.SettingsViewState
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val settingsViewModel: SettingsViewModel by lazy {
-        ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
-    }
+    private val settingsViewModel by viewModel<SettingsViewModel>()
 
     companion object {
         const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"

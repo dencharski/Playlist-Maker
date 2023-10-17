@@ -20,18 +20,14 @@ import com.example.playlistmaker.audio_player_activity.ui.AudioPlayerActivity
 import com.example.playlistmaker.search_activity.data.dto.SearchViewState
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     TrackListAdapterHistory.ItemClickInterfaceHistory {
 
     private lateinit var binding: ActivitySearchBinding
-    private val searchViewModel: SearchViewModel by lazy {
-        ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(applicationContext)
-        )[SearchViewModel::class.java]
-    }
+    private val searchViewModel by viewModel<SearchViewModel>()
 
     private var trackListAdapter: TrackListAdapter? = null
     private var trackListAdapterHistory: TrackListAdapterHistory? = null
@@ -44,7 +40,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         private const val teg = "SearchActivity"
         private const val key: String = "key"
         private val trackList = arrayListOf<TrackDtoApp>()
-        private val trackListHistory=arrayListOf<TrackDtoApp>()
+        private val trackListHistory = arrayListOf<TrackDtoApp>()
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
@@ -114,7 +110,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                     if (trackListHistory.size != 0) {
                         binding.layoutSearchHistory.visibility = View.VISIBLE
                         binding.layoutRecyclerView.visibility = View.GONE
-                    }else{
+                    } else {
                         Log.d(teg, "trackListHistory.itemCount == 0")
                     }
 

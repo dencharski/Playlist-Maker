@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -21,10 +22,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private var binding: ActivityAudioplayerBinding? = null
 
-    private val audioPlayerViewModel: AudioPlayerViewModel by lazy { ViewModelProvider(
-        this,
-        AudioPlayerViewModel.getViewModelFactory()
-    )[AudioPlayerViewModel::class.java] }
+    private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
     private var track: TrackDtoApp? = null
 
