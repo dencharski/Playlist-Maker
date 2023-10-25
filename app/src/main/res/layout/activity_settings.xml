@@ -45,7 +45,10 @@
         android:id="@+id/layout_dark_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_search_image"
+        android:layout_marginStart="@dimen/margin_search_image"
+        android:layout_marginTop="@dimen/bottom_title_margin"
+        android:layout_marginEnd="@dimen/margin_search_image"
+        android:layout_marginBottom="@dimen/margin_search_image"
         android:orientation="horizontal">
 
         <TextView
@@ -62,11 +65,11 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_dark_theme"
+            style="@style/SettingsLightDarkThemeSwitchStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="6dp"
-
 
             />
     </LinearLayout>
@@ -156,8 +159,8 @@
         <ImageView
             android:id="@+id/image_view_user_agreement"
             style="@style/SettingsImageViewItemStyles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/arrow_size"
+            android:layout_height="@dimen/arrow_size"
             android:layout_marginTop="@dimen/margin_settings_menu_top"
             android:layout_marginEnd="@dimen/margin_settings_menu_start"
             android:layout_marginBottom="@dimen/margin_settings_menu_bottom"

@@ -14,6 +14,8 @@ class App:Application() {
 
     companion object{
         const val trackKey = "trackKey"
+        const val THEME_KEY="THEME_KEY"
+
     }
     override fun onCreate() {
         super.onCreate()

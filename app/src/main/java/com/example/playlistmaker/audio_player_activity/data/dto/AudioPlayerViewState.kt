@@ -1,9 +1,18 @@
 package com.example.playlistmaker.audio_player_activity.data.dto
 
-import android.media.MediaPlayer
 import com.example.playlistmaker.TrackDtoApp
 
-data class AudioPlayerViewState(
-    var track: TrackDtoApp?,
-    var mediaPlayer: MediaPlayer
-)
+sealed class AudioPlayerViewState {
+
+    object Play :AudioPlayerViewState()
+    object Pause : AudioPlayerViewState()
+    object Error : AudioPlayerViewState()
+    data class Track(
+        val track: TrackDtoApp = TrackDtoApp(
+            0, "", "", "", "", "", "", "", "", ""
+        )
+    ) :
+        AudioPlayerViewState()
+
+    data class CurrentPosition(val currentPosition: String="00:00"):AudioPlayerViewState()
+}

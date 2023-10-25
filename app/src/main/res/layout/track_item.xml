@@ -72,8 +72,8 @@
     <ImageView
         android:id="@+id/image_view_arrow_forward"
         style="@style/SearchItemTrackImageViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/arrow_size"
+        android:layout_height="@dimen/arrow_size"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/margin_search_image"
         android:layout_marginEnd="@dimen/margin_settings_menu_end"

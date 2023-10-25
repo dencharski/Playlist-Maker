@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        mainViewModel.setTheme()
+
         binding.buttonSearch.setOnClickListener {
             startActivity(
                 Intent(

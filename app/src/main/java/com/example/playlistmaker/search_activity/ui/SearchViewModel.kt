@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.search_activity.SearchCreator
 import com.example.playlistmaker.search_activity.data.dto.ResponseModel
 import com.example.playlistmaker.search_activity.data.dto.SearchViewState
 import com.example.playlistmaker.search_activity.domain.api.SearchHistoryInteractor
@@ -45,16 +44,7 @@ class SearchViewModel(
     companion object {
         private const val teg = "SearchActivity"
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val searchInteractorImpl = SearchCreator.getSearchInteractor()
 
-                    val searchHistoryInteractorImpl =
-                        SearchCreator.getSearchHistoryInteractor(context)
-                    SearchViewModel(searchInteractorImpl, searchHistoryInteractorImpl)
-                }
-            }
     }
 
     fun searchDebounce() {
