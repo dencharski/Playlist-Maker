@@ -13,11 +13,10 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.audio_player_activity.domain.models.TrackDto
 import com.example.playlistmaker.audio_player_activity.ui.AudioPlayerActivity
-import com.example.playlistmaker.search_activity.data.dto.SearchViewState
+import com.example.playlistmaker.search_activity.domain.models.SearchViewState
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -36,21 +35,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     private val handler = Handler(Looper.getMainLooper())
 
 
-    companion object {
-        private const val teg = "SearchActivity"
-        private const val key: String = "key"
-        private val trackList = arrayListOf<TrackDtoApp>()
-        private val trackListHistory = arrayListOf<TrackDtoApp>()
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
 
         trackListAdapter = TrackListAdapter()
         trackListAdapter?.setInItemClickListener(this)
@@ -67,7 +56,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
         binding.buttonCleanHistory.setOnClickListener {
             searchViewModel.removeTrackListInSharedPreferences()
             binding.layoutSearchHistory.visibility = View.GONE
-
         }
 
         binding.imageViewClear.setOnClickListener {
@@ -79,7 +67,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
-
         }
 
         binding.imageViewBackArrow.setOnClickListener { finish() }
@@ -88,7 +75,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
 
         binding.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -96,56 +82,45 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                     binding.imageViewClear.visibility = View.GONE
                     trackListAdapter?.setTrackList(arrayListOf())
                 } else {
-
                     searchViewModel.setTextTrack(s.toString())
-
-
                     binding.imageViewClear.visibility = View.VISIBLE
                 }
 
-
                 if (binding.editTextSearch.hasFocus() && s?.isEmpty() == true) {
-                    Log.d(teg, "TextChangedListener focus - true")
-
+                    Log.d(tag, "TextChangedListener focus - true")
                     if (trackListHistory.size != 0) {
                         binding.layoutSearchHistory.visibility = View.VISIBLE
                         binding.layoutRecyclerView.visibility = View.GONE
                     } else {
-                        Log.d(teg, "trackListHistory.itemCount == 0")
+                        Log.d(tag, "trackListHistory.itemCount == 0")
                     }
-
                 } else {
-                    Log.d(teg, "TextChangedListener focus - false")
+                    Log.d(tag, "TextChangedListener focus - false")
                     binding.layoutSearchHistory.visibility = View.GONE
                     binding.layoutRecyclerView.visibility = View.VISIBLE
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
-
             }
         })
 
         binding.editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-
                 true
             }
             false
         }
 
         binding.editTextSearch.setOnFocusChangeListener { view, hasFocus ->
-
             if (hasFocus && binding.editTextSearch.text?.isEmpty() == true) {
-                Log.d(teg, "focus - true")
+                Log.d(tag, "focus - true")
                 if (trackListAdapterHistory?.itemCount != 0) {
                     binding.layoutSearchHistory.visibility = View.VISIBLE
                     binding.layoutRecyclerView.visibility = View.GONE
                 }
-
             } else {
-                Log.d(teg, "focus - false")
-
+                Log.d(tag, "focus - false")
             }
         }
     }
@@ -158,9 +133,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
     private fun observeViewModelState() {
         searchViewModel.searchViewModelState.observe(this) {
             when (it) {
-                is SearchViewState.Loading ->
-                    showStartNewRequestLoading()
-
+                is SearchViewState.Loading -> showStartNewRequestLoading()
                 is SearchViewState.Error -> showErrorResult()
                 is SearchViewState.Empty -> showEmptyResult()
                 is SearchViewState.SearchViewStateData -> {
@@ -255,7 +228,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
                 track.previewUrl
             )
         )
-
         startActivity(intent)
     }
 
@@ -266,6 +238,14 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickInterface,
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
+    }
+
+    companion object {
+        private const val tag = "SearchActivity"
+        private const val key: String = "key"
+        private val trackList = arrayListOf<TrackDtoApp>()
+        private val trackListHistory = arrayListOf<TrackDtoApp>()
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
 }

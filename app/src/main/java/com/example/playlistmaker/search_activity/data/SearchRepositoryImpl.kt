@@ -2,7 +2,7 @@ package com.example.playlistmaker.search_activity.data
 
 import com.example.playlistmaker.search_activity.domain.api.SearchRepository
 import com.example.playlistmaker.search_activity.data.network.ITunesSearchInterface
-import com.example.playlistmaker.search_activity.data.dto.ResponseModel
+import com.example.playlistmaker.search_activity.domain.models.ResponseModel
 import retrofit2.Call
 
 class SearchRepositoryImpl(private val iTunesSearchClient: ITunesSearchInterface?) : SearchRepository {

@@ -1,39 +1,25 @@
 package com.example.playlistmaker.audio_player_activity.ui
 
 import android.content.Context
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TrackDtoApp
-import com.example.playlistmaker.audio_player_activity.data.dto.AudioPlayerViewState
+import com.example.playlistmaker.audio_player_activity.domain.models.AudioPlayerViewState
+import com.example.playlistmaker.audio_player_activity.domain.models.TrackDto
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
 
     private var binding: ActivityAudioplayerBinding? = null
-
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
-
-
-    companion object {
-        private const val cornerRadius: Float = 8f
-        private const val ZERO_VAL = "00:00"
-        private const val teg = "audioplayer"
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,7 +27,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         val view = binding?.root
         setContentView(view)
 
-        audioPlayerViewModel.setDataExtrasTrack(intent.extras)
+        audioPlayerViewModel.setDataExtrasTrack(intent.extras?.getParcelable(App.trackKey))
 
         observeValues()
 
@@ -52,12 +38,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding?.imageButtonPlayTrack?.setOnClickListener {
-
             audioPlayerViewModel.playbackControl()
         }
 
         binding?.imageButtonPauseTrack?.setOnClickListener {
-
             audioPlayerViewModel.playbackControl()
         }
 
@@ -65,11 +49,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
 
     private fun observeValues() {
-
         audioPlayerViewModel.audioPlayerViewState.observe(this) {
             when (it) {
                 is AudioPlayerViewState.Error -> {
-                    Log.d(teg, "error view state")
+                    Log.d(tag, "error view state")
                 }
 
                 is AudioPlayerViewState.Play -> {
@@ -85,10 +68,8 @@ class AudioPlayerActivity : AppCompatActivity() {
                 is AudioPlayerViewState.Track -> {
                     setViews(it.track)
                     binding?.imageButtonPlayTrack?.isEnabled = true
-
                     binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
                     binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
-
                     binding?.textViewTrackTimeNowPlay?.text = ZERO_VAL
                 }
 
@@ -96,14 +77,15 @@ class AudioPlayerActivity : AppCompatActivity() {
                     binding?.textViewTrackTimeNowPlay?.text = it.currentPosition
                 }
 
-                else -> {
+                is AudioPlayerViewState.PlayCompleted -> {
+                    audioPlayerViewModel.playbackControl()
+                    binding?.textViewTrackTimeNowPlay?.text = ZERO_VAL
+                }
 
+                else -> {
                 }
             }
-
-
         }
-
     }
 
     private fun getCoverArtwork(track: TrackDtoApp) = track.artworkUrl512
@@ -147,5 +129,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onDestroy()
         audioPlayerViewModel.onDestroy()
 
+    }
+
+    companion object {
+        private const val cornerRadius: Float = 8f
+        private const val ZERO_VAL = "00:00"
+        private const val tag = "audioplayer"
     }
 }

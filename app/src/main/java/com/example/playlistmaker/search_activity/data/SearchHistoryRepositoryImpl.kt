@@ -12,21 +12,13 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     private val trackList = arrayListOf<TrackDtoApp>()
     private val trackListId = arrayListOf<Long>()
 
-    companion object {
-        private const val USER_LIST_KEY = "USER_LIST_KEY"
-        private const val capacity: Int = 10
-        private const val teg = "SearchActivity"
-    }
-
     init {
-
         trackList.addAll(read())
         addListId()
         Log.d(teg, "init ${trackListId.size}")
     }
 
     override fun writeOneTrack(track: TrackDtoApp) {
-
         val arrayListOfTrackDtoApp = arrayListOf<TrackDtoApp>()
         if (trackListId.contains(track.trackId)) {
             arrayListOfTrackDtoApp.add(track)
@@ -35,7 +27,6 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
                     arrayListOfTrackDtoApp.add(it)
                 }
             }
-
         } else {
             arrayListOfTrackDtoApp.add(track)
             arrayListOfTrackDtoApp.addAll(trackList)
@@ -50,11 +41,9 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         trackList.clear()
         trackList.addAll(read())
         addListId()
-
     }
 
     override fun getTrackList() = trackList
-
     override fun removeTrackListInSharedPreferences() {
         sharedPreferences.edit()
             .remove(USER_LIST_KEY)
@@ -81,8 +70,11 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     private fun read(): Array<TrackDtoApp> {
         val json = sharedPreferences.getString(USER_LIST_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<TrackDtoApp>::class.java)
-
     }
 
-
+    companion object {
+        private const val USER_LIST_KEY = "USER_LIST_KEY"
+        private const val capacity: Int = 10
+        private const val teg = "SearchActivity"
+    }
 }

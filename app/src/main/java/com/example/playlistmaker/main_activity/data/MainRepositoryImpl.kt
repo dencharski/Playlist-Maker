@@ -21,9 +21,7 @@ class MainRepositoryImpl(private val sharedPreferences: SharedPreferences) : Mai
     }
 
     private fun readTheme(): Boolean {
-
         val json = sharedPreferences.getString(App.THEME_KEY, false.toString()) ?: return false
-
         return Gson().fromJson(json, Boolean::class.java)
     }
 }

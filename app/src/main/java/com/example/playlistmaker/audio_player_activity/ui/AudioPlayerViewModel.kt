@@ -11,8 +11,7 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.audio_player_activity.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audio_player_activity.domain.models.TrackDto
 import com.example.playlistmaker.TrackDtoApp
-import com.example.playlistmaker.audio_player_activity.data.AudioPlayerRepositoryImpl
-import com.example.playlistmaker.audio_player_activity.data.dto.AudioPlayerViewState
+import com.example.playlistmaker.audio_player_activity.domain.models.AudioPlayerViewState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -20,13 +19,9 @@ class AudioPlayerViewModel(
     private val audioPlayerInteractorImpl: AudioPlayerInteractor
 ) : ViewModel() {
 
-
     private val _audioPlayerViewState = MutableLiveData<AudioPlayerViewState>()
     val audioPlayerViewState: LiveData<AudioPlayerViewState> get() = _audioPlayerViewState
-
-
     private val handler = Handler(Looper.getMainLooper())
-
     private val runnable = object : Runnable {
         override fun run() {
             refreshTimeNowPlay()
@@ -34,16 +29,8 @@ class AudioPlayerViewModel(
         }
     }
 
-    companion object {
-        private const val REFRESH_LIST_DELAY_MILLIS = 500L
-    }
-
-
-
-    fun setDataExtrasTrack(extras: Bundle?) {
-        val track = extras?.getParcelable<TrackDto>(App.trackKey)
+    fun setDataExtrasTrack(track: TrackDto?) {
         if (track != null) {
-
             setAudioPlayerViewState(
                 TrackDtoApp(
                     track.trackId,
@@ -66,42 +53,40 @@ class AudioPlayerViewModel(
     }
 
     fun playbackControl() {
-
         when (audioPlayerInteractorImpl.playbackControl()) {
-            AudioPlayerRepositoryImpl.STATE_PREPARED,AudioPlayerRepositoryImpl.STATE_PAUSED -> {
+            App.STATE_PREPARED, App.STATE_PAUSED -> {
                 pausePlayer()
             }
-            AudioPlayerRepositoryImpl.STATE_PLAYING -> {
+
+            App.STATE_PLAYING -> {
                 startPlayer()
             }
         }
-
     }
 
     private fun startPlayer() {
         handler.postDelayed(runnable, REFRESH_LIST_DELAY_MILLIS)
         _audioPlayerViewState.postValue(AudioPlayerViewState.Play)
-
     }
 
     private fun pausePlayer() {
         stopTimer()
         _audioPlayerViewState.postValue(AudioPlayerViewState.Pause)
-
     }
 
     private fun refreshTimeNowPlay() {
-
-        _audioPlayerViewState.postValue(
-            AudioPlayerViewState.CurrentPosition(
-                currentPosition
-                = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(audioPlayerInteractorImpl.getMediaPlayerCurrentPosition())
-            )
-        )
-
+        if (audioPlayerInteractorImpl.getIsPlayingCompleted() == App.STATE_DEFAULT_COMPLETED) {
+            _audioPlayerViewState.postValue(AudioPlayerViewState.PlayCompleted)
+        } else {
+            _audioPlayerViewState.value =
+                AudioPlayerViewState.CurrentPosition(
+                    currentPosition
+                    = SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(audioPlayerInteractorImpl.getMediaPlayerCurrentPosition())
+                )
+        }
     }
 
     private fun stopTimer() {
@@ -110,6 +95,7 @@ class AudioPlayerViewModel(
 
     fun onPause() {
         audioPlayerInteractorImpl.onPause()
+        pausePlayer()
     }
 
     fun onDestroy() {
@@ -124,4 +110,7 @@ class AudioPlayerViewModel(
         _audioPlayerViewState.postValue(AudioPlayerViewState.Error)
     }
 
+    companion object {
+        private const val REFRESH_LIST_DELAY_MILLIS = 500L
+    }
 }

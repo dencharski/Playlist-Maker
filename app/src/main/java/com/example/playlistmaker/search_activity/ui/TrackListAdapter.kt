@@ -15,14 +15,8 @@ import com.example.playlistmaker.databinding.TrackItemBinding
 
 class TrackListAdapter() :
     RecyclerView.Adapter<TrackListAdapter.TrackViewHolder>() {
-
     private var trackList = arrayListOf<TrackDtoApp>()
-
     private var itemClickListener: ItemClickInterface? = null
-
-    companion object {
-        const val cornerRadius: Float = 2f
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
 
@@ -37,7 +31,6 @@ class TrackListAdapter() :
 
     override fun getItemCount() = trackList.size
 
-
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
     }
@@ -48,7 +41,7 @@ class TrackListAdapter() :
     }
 
     interface ItemClickInterface {
-        fun onItemClick(track:TrackDtoApp)
+        fun onItemClick(track: TrackDtoApp)
     }
 
     fun setInItemClickListener(itemClickListener: ItemClickInterface) {
@@ -64,18 +57,23 @@ class TrackListAdapter() :
         private val artistName: TextView = binding.textViewArtistName
         private val trackTime: TextView = binding.textViewTrackTime
         private val artworkImageView: ImageView = binding.imageViewArtwork
-        private var itemTrackDtoApp:TrackDtoApp?=null
+        private var itemTrackDtoApp: TrackDtoApp? = null
 
         init {
-            itemView.setOnClickListener { itemTrackDtoApp?.let { it1 -> itemClickListener?.onItemClick(it1) } }
+            itemView.setOnClickListener {
+                itemTrackDtoApp?.let { it1 ->
+                    itemClickListener?.onItemClick(
+                        it1
+                    )
+                }
+            }
         }
 
         fun bind(track: TrackDtoApp) {
-            itemTrackDtoApp=track
+            itemTrackDtoApp = track
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text = track.getTrackTime()
-
 
             Glide.with(itemView)
                 .load(track.artworkUrl100)
@@ -83,7 +81,6 @@ class TrackListAdapter() :
                 .centerCrop()
                 .transform(RoundedCorners(dpToPx(cornerRadius, itemView.context)))
                 .into(artworkImageView)
-
         }
 
         private fun dpToPx(dp: Float, context: Context): Int {
@@ -93,8 +90,10 @@ class TrackListAdapter() :
                 context.resources.displayMetrics
             ).toInt()
         }
-
     }
 
+    companion object {
+        const val cornerRadius: Float = 2f
+    }
 
 }

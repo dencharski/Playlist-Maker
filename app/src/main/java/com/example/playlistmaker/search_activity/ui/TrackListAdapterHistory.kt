@@ -15,19 +15,11 @@ import com.example.playlistmaker.databinding.TrackItemBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackListAdapterHistory:
+class TrackListAdapterHistory :
     RecyclerView.Adapter<TrackListAdapterHistory.TrackViewHolder>() {
-
     private var trackList = arrayListOf<TrackDtoApp>()
-
     private var itemClickListener: ItemClickInterfaceHistory? = null
-
-    companion object {
-        const val cornerRadius: Float = 2f
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-
         return TrackViewHolder(
             TrackItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -38,8 +30,6 @@ class TrackListAdapterHistory:
     }
 
     override fun getItemCount() = trackList.size
-
-
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
     }
@@ -61,19 +51,24 @@ class TrackListAdapterHistory:
         binding: TrackItemBinding,
         private val itemClickListener: ItemClickInterfaceHistory?
     ) : RecyclerView.ViewHolder(binding.root) {
-
         private val trackName: TextView = binding.textViewTrackName
         private val artistName: TextView = binding.textViewArtistName
         private val trackTime: TextView = binding.textViewTrackTime
         private val artworkImageView: ImageView = binding.imageViewArtwork
-        private var itemTrackDtoApp: TrackDtoApp?=null
+        private var itemTrackDtoApp: TrackDtoApp? = null
 
         init {
-            itemView.setOnClickListener { itemTrackDtoApp?.let { it1 -> itemClickListener?.onItemClickHistory(it1) } }
+            itemView.setOnClickListener {
+                itemTrackDtoApp?.let { it1 ->
+                    itemClickListener?.onItemClickHistory(
+                        it1
+                    )
+                }
+            }
         }
 
         fun bind(track: TrackDtoApp) {
-            itemTrackDtoApp=track
+            itemTrackDtoApp = track
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text = SimpleDateFormat(
@@ -81,14 +76,12 @@ class TrackListAdapterHistory:
                 Locale.getDefault()
             ).format(track.trackTimeMillis.toLongOrNull())
 
-
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)
                 .centerCrop()
                 .transform(RoundedCorners(dpToPx(cornerRadius, itemView.context)))
                 .into(artworkImageView)
-
         }
 
         private fun dpToPx(dp: Float, context: Context): Int {
@@ -98,8 +91,9 @@ class TrackListAdapterHistory:
                 context.resources.displayMetrics
             ).toInt()
         }
-
     }
 
-
+    companion object {
+        const val cornerRadius: Float = 2f
+    }
 }

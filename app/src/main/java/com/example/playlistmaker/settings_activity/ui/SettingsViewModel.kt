@@ -3,7 +3,7 @@ package com.example.playlistmaker.settings_activity.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.settings_activity.data.dto.SettingsViewState
+import com.example.playlistmaker.settings_activity.domain.models.SettingsViewState
 import com.example.playlistmaker.settings_activity.domain.api.SettingsInteractor
 
 class SettingsViewModel(private val settingsInteractorImpl: SettingsInteractor) :
@@ -16,10 +16,9 @@ class SettingsViewModel(private val settingsInteractorImpl: SettingsInteractor) 
     }
 
     fun setIsDarkTheme(darkThemeEnabled: Boolean) {
-
-        if (settingsInteractorImpl.switchTheme(darkThemeEnabled)){
+        if (settingsInteractorImpl.switchTheme(darkThemeEnabled)) {
             _isDarkTheme.postValue(SettingsViewState.Dark)
-        }else{
+        } else {
             _isDarkTheme.postValue(SettingsViewState.Light)
         }
     }

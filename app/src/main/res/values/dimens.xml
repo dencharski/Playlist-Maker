@@ -28,4 +28,5 @@
     <dimen name="player_small_gray_button_size">52dp</dimen>
 
     <dimen name="search_track_progressbar_size">44dp</dimen>
+    <dimen name="margin_top_play_pause_button_player">30dp</dimen>
 </resources>

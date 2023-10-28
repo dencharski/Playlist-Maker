@@ -9,14 +9,8 @@ import com.example.playlistmaker.di.DependencyModule.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
-class App:Application() {
+class App : Application() {
 
-
-    companion object{
-        const val trackKey = "trackKey"
-        const val THEME_KEY="THEME_KEY"
-
-    }
     override fun onCreate() {
         super.onCreate()
 
@@ -26,5 +20,15 @@ class App:Application() {
         }
     }
 
+    companion object {
+        const val trackKey = "trackKey"
+        const val THEME_KEY = "THEME_KEY"
+
+        const val STATE_DEFAULT_COMPLETED = 0
+        const val STATE_PREPARED = 1
+        const val STATE_PLAYING = 2
+        const val STATE_PAUSED = 3
+
+    }
 
 }

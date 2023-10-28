@@ -2,7 +2,6 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.audio_player_activity.data.AudioPlayerRepositoryImpl
 import com.example.playlistmaker.audio_player_activity.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audio_player_activity.domain.api.AudioPlayerRepository
@@ -16,7 +15,6 @@ import com.example.playlistmaker.main_activity.ui.MainViewModel
 import com.example.playlistmaker.mediateka_activity.ui.MediatekaViewModel
 import com.example.playlistmaker.search_activity.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search_activity.data.SearchRepositoryImpl
-import com.example.playlistmaker.search_activity.data.network.ITunesSearchClient
 import com.example.playlistmaker.search_activity.data.network.ITunesSearchInterface
 import com.example.playlistmaker.search_activity.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search_activity.domain.api.SearchHistoryRepository
@@ -34,7 +32,6 @@ import com.example.playlistmaker.settings_activity.ui.SettingsViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.scope.get
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -42,9 +39,7 @@ import java.util.concurrent.TimeUnit
 
 object DependencyModule {
 
-
     val dataModule = module {
-
         single<ITunesSearchInterface> {
             Retrofit.Builder()
                 .baseUrl("https://itunes.apple.com/")
@@ -72,7 +67,6 @@ object DependencyModule {
 
     }
     val repositoryModule = module {
-
         single<AudioPlayerRepository> { AudioPlayerRepositoryImpl(get()) }
         single<SearchRepository> { SearchRepositoryImpl(get()) }
         single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get()) }
@@ -93,6 +87,4 @@ object DependencyModule {
         viewModel { SearchViewModel(get(), get()) }
         viewModel { SettingsViewModel(get()) }
     }
-
-
 }
