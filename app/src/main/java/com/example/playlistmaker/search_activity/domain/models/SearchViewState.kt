@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search_activity.data.dto
+package com.example.playlistmaker.search_activity.domain.models
 
 import com.example.playlistmaker.TrackDtoApp
 

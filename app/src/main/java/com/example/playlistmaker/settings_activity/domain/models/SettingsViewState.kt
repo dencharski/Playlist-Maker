@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings_activity.data.dto
+package com.example.playlistmaker.settings_activity.domain.models
 
 sealed class SettingsViewState {
     object Light : SettingsViewState()

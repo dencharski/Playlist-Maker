@@ -7,12 +7,5 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 
 class MediatekaViewModel:ViewModel() {
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MediatekaViewModel()
-            }
-        }
 
-    }
 }

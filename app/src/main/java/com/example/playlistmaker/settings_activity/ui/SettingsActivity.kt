@@ -4,32 +4,20 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.settings_activity.data.dto.SettingsViewState
+import com.example.playlistmaker.settings_activity.domain.models.SettingsViewState
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivitySettingsBinding
-    private val settingsViewModel: SettingsViewModel by lazy {
-        ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
-    }
-
-    companion object {
-        const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"
-    }
-
+    private val settingsViewModel by viewModel<SettingsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         val view = binding.root
+
         setContentView(view)
-
-
         observeValues()
 
         binding.switchDarkTheme.setOnCheckedChangeListener { _, checked ->
@@ -70,7 +58,6 @@ class SettingsActivity : AppCompatActivity() {
             intent.action = Intent.ACTION_VIEW
             intent.data = Uri.parse(getString(R.string.practicum_offer))
             startActivity(intent)
-
         }
     }
 
@@ -80,7 +67,10 @@ class SettingsActivity : AppCompatActivity() {
                 SettingsViewState.Dark -> binding.switchDarkTheme.isChecked = true
                 SettingsViewState.Light -> binding.switchDarkTheme.isChecked = false
             }
-
         }
+    }
+
+    companion object {
+        const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"
     }
 }

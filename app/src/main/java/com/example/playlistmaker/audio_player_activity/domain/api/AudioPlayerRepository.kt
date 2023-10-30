@@ -1,7 +1,11 @@
 package com.example.playlistmaker.audio_player_activity.domain.api
 
-import android.media.MediaPlayer
-
 interface AudioPlayerRepository {
-    fun getPlayer():MediaPlayer
+
+
+    fun setTrack(previewUrl:String)
+    fun playbackControl():Int
+    fun onPause()
+    fun getMediaPlayerCurrentPosition():Int
+    fun getIsPlayingCompleted():Int
 }

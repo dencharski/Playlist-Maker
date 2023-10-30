@@ -1,4 +1,4 @@
-package com.example.playlistmaker.audio_player_activity.domain.models
+package com.example.playlistmaker.audio_player_activity.data.dto
 
 import android.os.Parcel
 import android.os.Parcelable

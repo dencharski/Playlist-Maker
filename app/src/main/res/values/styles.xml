@@ -22,7 +22,7 @@
     <style name="SettingsTextViewItemStyle">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
     <style name="SettingsImageViewItemStyles">
@@ -31,6 +31,11 @@
 
     <style name="SettingsImageViewBackArrowStyles">
         <item name="tint">@color/button_textColor</item>
+    </style>
+
+    <style name="SettingsLightDarkThemeSwitchStyle">
+        <item name="trackTint">@color/search_layout_color</item>
+        <item name="thumbTint">@color/image_color</item>
     </style>
 
     <style name="SearchLayoutStyles">
@@ -91,25 +96,29 @@
     </style>
 
     <style name="PlayerGrayButtonStyle">
-        <item name="android:alpha">0.25</item>
-        <item name="backgroundTint">@color/button_textColor</item>
+        <item name="backgroundTint">@color/light_gray</item>
+
 
     </style>
 
     <style name="PlayerButtonPlayTrackStyle">
         <item name="tint">@color/white</item>
         <item name="backgroundTint">@color/button_textColor</item>
+        <item name="android:padding">@dimen/top_title_margin</item>
     </style>
+
     <style name="PlayerTextViewLabelsStyle">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/image_color</item>
         <item name="android:textSize">@dimen/player_text_view_info_text_size</item>
 
     </style>
+
     <style name="PlayerTextViewInfoStyle">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/button_textColor</item>
         <item name="android:textSize">@dimen/player_text_view_info_text_size</item>
+        <item name="android:gravity">end</item>
 
     </style>
 
