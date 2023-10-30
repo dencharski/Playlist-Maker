@@ -12,7 +12,6 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.audio_player_activity.domain.models.AudioPlayerViewState
-import com.example.playlistmaker.audio_player_activity.domain.models.TrackDto
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -1,16 +1,15 @@
 package com.example.playlistmaker.audio_player_activity.ui
 
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.App
 import com.example.playlistmaker.audio_player_activity.domain.api.AudioPlayerInteractor
-import com.example.playlistmaker.audio_player_activity.domain.models.TrackDto
+import com.example.playlistmaker.audio_player_activity.data.dto.TrackDto
 import com.example.playlistmaker.TrackDtoApp
+import com.example.playlistmaker.audio_player_activity.domain.models.AudioPlayerState
 import com.example.playlistmaker.audio_player_activity.domain.models.AudioPlayerViewState
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -54,11 +53,11 @@ class AudioPlayerViewModel(
 
     fun playbackControl() {
         when (audioPlayerInteractorImpl.playbackControl()) {
-            App.STATE_PREPARED, App.STATE_PAUSED -> {
+            AudioPlayerState.STATE_PREPARED, AudioPlayerState.STATE_PAUSED -> {
                 pausePlayer()
             }
 
-            App.STATE_PLAYING -> {
+            AudioPlayerState.STATE_PLAYING -> {
                 startPlayer()
             }
         }
@@ -75,7 +74,7 @@ class AudioPlayerViewModel(
     }
 
     private fun refreshTimeNowPlay() {
-        if (audioPlayerInteractorImpl.getIsPlayingCompleted() == App.STATE_DEFAULT_COMPLETED) {
+        if (audioPlayerInteractorImpl.getIsPlayingCompleted() == AudioPlayerState.STATE_DEFAULT_COMPLETED) {
             _audioPlayerViewState.postValue(AudioPlayerViewState.PlayCompleted)
         } else {
             _audioPlayerViewState.value =

@@ -4,10 +4,12 @@ import android.media.MediaPlayer
 import android.util.Log
 import com.example.playlistmaker.App
 import com.example.playlistmaker.audio_player_activity.domain.api.AudioPlayerRepository
+import com.example.playlistmaker.audio_player_activity.domain.impl.AudioPlayerInteractorImpl
+import com.example.playlistmaker.audio_player_activity.domain.models.AudioPlayerState
 
 class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
 
-    private var playerState = App.STATE_DEFAULT_COMPLETED
+    private var playerState = AudioPlayerState.STATE_DEFAULT_COMPLETED
 
     override fun setTrack(previewUrl: String) {
         preparePlayer(previewUrl)
@@ -18,35 +20,35 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerState = App.STATE_PREPARED
+            playerState = AudioPlayerState.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            playerState = App.STATE_DEFAULT_COMPLETED
+            playerState = AudioPlayerState.STATE_DEFAULT_COMPLETED
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playerState = App.STATE_PLAYING
+        playerState = AudioPlayerState.STATE_PLAYING
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        playerState = App.STATE_PAUSED
+        playerState = AudioPlayerState.STATE_PAUSED
     }
 
     override fun playbackControl(): Int {
 
         when (playerState) {
-            App.STATE_PLAYING -> {
+            AudioPlayerState.STATE_PLAYING -> {
                 pausePlayer()
             }
 
-           App.STATE_PREPARED,App.STATE_PAUSED -> {
+            AudioPlayerState.STATE_PREPARED,AudioPlayerState.STATE_PAUSED -> {
                 startPlayer()
             }
 
-            App.STATE_DEFAULT_COMPLETED -> {
+            AudioPlayerState.STATE_DEFAULT_COMPLETED -> {
                 pausePlayer()
             }
 

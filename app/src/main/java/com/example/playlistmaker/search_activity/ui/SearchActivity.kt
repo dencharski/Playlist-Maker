@@ -14,7 +14,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.example.playlistmaker.App
-import com.example.playlistmaker.audio_player_activity.domain.models.TrackDto
+import com.example.playlistmaker.audio_player_activity.data.dto.TrackDto
 import com.example.playlistmaker.audio_player_activity.ui.AudioPlayerActivity
 import com.example.playlistmaker.search_activity.domain.models.SearchViewState
 import com.example.playlistmaker.TrackDtoApp
