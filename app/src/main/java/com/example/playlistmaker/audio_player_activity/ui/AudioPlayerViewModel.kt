@@ -20,6 +20,9 @@ class AudioPlayerViewModel(
 
     private val _audioPlayerViewState = MutableLiveData<AudioPlayerViewState>()
     val audioPlayerViewState: LiveData<AudioPlayerViewState> get() = _audioPlayerViewState
+
+    private val _trackDtoApp = MutableLiveData<TrackDtoApp>()
+    val trackDtoApp: LiveData<TrackDtoApp> get() = _trackDtoApp
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = object : Runnable {
         override fun run() {
@@ -30,7 +33,7 @@ class AudioPlayerViewModel(
 
     fun setDataExtrasTrack(track: TrackDto?) {
         if (track != null) {
-            setAudioPlayerViewState(
+            _trackDtoApp.postValue(
                 TrackDtoApp(
                     track.trackId,
                     track.trackName,
@@ -44,6 +47,7 @@ class AudioPlayerViewModel(
                     track.previewUrl
                 )
             )
+
             audioPlayerInteractorImpl.setTrack(track.previewUrl)
         } else {
             setAudioPlayerViewStateError()
@@ -99,10 +103,6 @@ class AudioPlayerViewModel(
 
     fun onDestroy() {
         stopTimer()
-    }
-
-    private fun setAudioPlayerViewState(trackDtoApp: TrackDtoApp) {
-        _audioPlayerViewState.postValue(AudioPlayerViewState.Track(track = trackDtoApp))
     }
 
     private fun setAudioPlayerViewStateError() {

@@ -46,8 +46,16 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     }
 
-
     private fun observeValues() {
+
+        audioPlayerViewModel.trackDtoApp.observe(this) {
+            setViews(it)
+            binding?.imageButtonPlayTrack?.isEnabled = true
+            binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
+            binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
+            binding?.textViewTrackTimeNowPlay?.text = ZERO_VAL
+        }
+
         audioPlayerViewModel.audioPlayerViewState.observe(this) {
             when (it) {
                 is AudioPlayerViewState.Error -> {
@@ -64,13 +72,6 @@ class AudioPlayerActivity : AppCompatActivity() {
                     binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
                 }
 
-                is AudioPlayerViewState.Track -> {
-                    setViews(it.track)
-                    binding?.imageButtonPlayTrack?.isEnabled = true
-                    binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
-                    binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
-                    binding?.textViewTrackTimeNowPlay?.text = ZERO_VAL
-                }
 
                 is AudioPlayerViewState.CurrentPosition -> {
                     binding?.textViewTrackTimeNowPlay?.text = it.currentPosition
