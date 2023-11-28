@@ -29,4 +29,5 @@
 
     <dimen name="search_track_progressbar_size">44dp</dimen>
     <dimen name="margin_top_play_pause_button_player">30dp</dimen>
+    <dimen name="mediateka_text_view_width">300dp</dimen>
 </resources>
