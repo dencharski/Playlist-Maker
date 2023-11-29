@@ -3,6 +3,7 @@
 
     <style name="MainLayoutColor">
         <item name="android:background">@color/main_background_color</item>
+
     </style>
 
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">

@@ -3,12 +3,13 @@
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-
+        <item name="android:statusBarColor">@color/main_background_color</item>
 
     </style>
 
     <style name="MainLayoutColor" parent="Base.Theme.PlaylistMaker">
         <item name="android:background">@color/main_background_color_night</item>
+
     </style>
 
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -40,7 +41,8 @@
     </style>
 
     <style name="SettingsLightDarkThemeSwitchStyle">
-
+        <item name="trackTint">@color/main_background_color_light</item>
+        <item name="thumbTint">@color/main_background_color</item>
     </style>
 
     <style name="SearchLayoutStyles">
