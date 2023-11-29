@@ -30,4 +30,10 @@
     <string name="primary_genre_name_label">Жанр</string>
     <string name="country_label">Страна</string>
     <string name="track_time_label">Длительность</string>
+    
+    <string name="selected_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="your_mediateka_is_empty">Ваша медиатека пуста</string>
+    <string name="you_havent_created_a_single_playlist">Вы не создали ни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
 </resources>

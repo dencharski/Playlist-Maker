@@ -13,6 +13,8 @@ import com.example.playlistmaker.main_activity.domain.api.MainInteractor
 import com.example.playlistmaker.main_activity.domain.api.MainRepository
 import com.example.playlistmaker.main_activity.ui.MainViewModel
 import com.example.playlistmaker.mediateka_activity.ui.MediatekaViewModel
+import com.example.playlistmaker.mediateka_activity.ui.PlayListsViewModel
+import com.example.playlistmaker.mediateka_activity.ui.SelectedTracksViewModel
 import com.example.playlistmaker.search_activity.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search_activity.data.SearchRepositoryImpl
 import com.example.playlistmaker.search_activity.data.network.ITunesSearchInterface
@@ -86,5 +88,7 @@ object DependencyModule {
         viewModel { MediatekaViewModel() }
         viewModel { SearchViewModel(get(), get()) }
         viewModel { SettingsViewModel(get()) }
+        viewModel { SelectedTracksViewModel() }
+        viewModel { PlayListsViewModel() }
     }
 }
