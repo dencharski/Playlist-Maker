@@ -1,11 +1,9 @@
 package com.example.playlistmaker.main_activity.data
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.App
 import com.example.playlistmaker.main_activity.domain.api.MainRepository
-import com.example.playlistmaker.settings_activity.data.SettingsRepositoryImpl
 import com.google.gson.Gson
 
 class MainRepositoryImpl(private val sharedPreferences: SharedPreferences) : MainRepository {

@@ -124,7 +124,7 @@
     </style>
 
     <style name="MediatekaTabStyle">
-        <item name="background">@color/white</item>
+        <item name="android:background">@color/white</item>
         <item name="tabIndicatorColor">@color/button_textColor</item>
         <item name="tabTextColor">@color/button_textColor</item>
 
@@ -135,6 +135,18 @@
         <item name="android:textSize">@dimen/search_track_text_size</item>
         <item name="android:textColor">@color/dark_black</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="BottomNavigationViewStyle">
+
+        <item name="itemIconTint">@drawable/bottom_nav_item_color_light</item>
+        <item name="itemTextColor">@drawable/bottom_nav_item_color_light</item>
+        <item name="android:background">@color/title_textColor</item>
+
+    </style>
+
+    <style name="MainActivityColorStyle">
+        <item name="android:background">@color/title_textColor</item>
     </style>
 
 </resources>

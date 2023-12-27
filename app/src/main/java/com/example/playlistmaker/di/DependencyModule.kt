@@ -12,25 +12,25 @@ import com.example.playlistmaker.main_activity.domain.MainInteractorImpl
 import com.example.playlistmaker.main_activity.domain.api.MainInteractor
 import com.example.playlistmaker.main_activity.domain.api.MainRepository
 import com.example.playlistmaker.main_activity.ui.MainViewModel
-import com.example.playlistmaker.mediateka_activity.ui.MediatekaViewModel
-import com.example.playlistmaker.mediateka_activity.ui.PlayListsViewModel
-import com.example.playlistmaker.mediateka_activity.ui.SelectedTracksViewModel
-import com.example.playlistmaker.search_activity.data.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.search_activity.data.SearchRepositoryImpl
-import com.example.playlistmaker.search_activity.data.network.ITunesSearchInterface
-import com.example.playlistmaker.search_activity.domain.api.SearchHistoryInteractor
-import com.example.playlistmaker.search_activity.domain.api.SearchHistoryRepository
-import com.example.playlistmaker.search_activity.domain.api.SearchInteractor
-import com.example.playlistmaker.search_activity.domain.api.SearchRepository
-import com.example.playlistmaker.search_activity.domain.impl.SearchHistoryInteractorImpl
-import com.example.playlistmaker.search_activity.domain.impl.SearchInteractorImpl
-import com.example.playlistmaker.search_activity.ui.SearchViewModel
-import com.example.playlistmaker.settings_activity.data.SettingsRepositoryImpl
-import com.example.playlistmaker.settings_activity.domain.api.SettingsInteractor
-import com.example.playlistmaker.settings_activity.domain.api.SettingsRepository
-import com.example.playlistmaker.settings_activity.domain.impl.SettingsInteractorImpl
-import com.example.playlistmaker.settings_activity.ui.SettingsActivity
-import com.example.playlistmaker.settings_activity.ui.SettingsViewModel
+import com.example.playlistmaker.mediateka_fragment.ui.MediatekaViewModel
+import com.example.playlistmaker.mediateka_fragment.ui.PlayListsViewModel
+import com.example.playlistmaker.mediateka_fragment.ui.SelectedTracksViewModel
+import com.example.playlistmaker.search_fragment.data.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.search_fragment.data.SearchRepositoryImpl
+import com.example.playlistmaker.search_fragment.data.network.ITunesSearchInterface
+import com.example.playlistmaker.search_fragment.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search_fragment.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.search_fragment.domain.api.SearchInteractor
+import com.example.playlistmaker.search_fragment.domain.api.SearchRepository
+import com.example.playlistmaker.search_fragment.domain.impl.SearchHistoryInteractorImpl
+import com.example.playlistmaker.search_fragment.domain.impl.SearchInteractorImpl
+import com.example.playlistmaker.search_fragment.ui.SearchViewModel
+import com.example.playlistmaker.settings_fragment.data.SettingsRepositoryImpl
+import com.example.playlistmaker.settings_fragment.domain.api.SettingsInteractor
+import com.example.playlistmaker.settings_fragment.domain.api.SettingsRepository
+import com.example.playlistmaker.settings_fragment.domain.impl.SettingsInteractorImpl
+import com.example.playlistmaker.settings_fragment.ui.SettingsFragment
+import com.example.playlistmaker.settings_fragment.ui.SettingsViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -60,7 +60,7 @@ object DependencyModule {
         single {
             androidContext()
                 .getSharedPreferences(
-                    SettingsActivity.PRACTICUM_EXAMPLE_PREFERENCES,
+                    SettingsFragment.PRACTICUM_EXAMPLE_PREFERENCES,
                     Context.MODE_PRIVATE
                 )
         }

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MainActivityColorStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".audio_player_activity.ui.AudioPlayerActivity">
@@ -162,14 +163,14 @@
                 app:layout_constraintStart_toStartOf="@+id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/image_button_play_track" />
 
-   <!--         <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/bottom_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintGuide_percent="0.75" />
--->
+            <!--         <androidx.constraintlayout.widget.Guideline
+                         android:id="@+id/bottom_guideline"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:orientation="horizontal"
+                         android:visibility="gone"
+                         app:layout_constraintGuide_percent="0.75" />
+         -->
             <TextView
                 android:id="@+id/text_view_track_time_label"
                 style="@style/PlayerTextViewLabelsStyle"

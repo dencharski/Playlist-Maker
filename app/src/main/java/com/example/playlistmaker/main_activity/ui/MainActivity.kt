@@ -3,11 +3,14 @@ package com.example.playlistmaker.main_activity.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.mediateka_activity.ui.MediatekaActivity
-import com.example.playlistmaker.search_activity.ui.SearchActivity
-import com.example.playlistmaker.settings_activity.ui.SettingsActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.example.playlistmaker.R
+import com.example.playlistmaker.mediateka_fragment.ui.MediatekaFragment
+import com.example.playlistmaker.search_fragment.ui.SearchFragment
+import com.example.playlistmaker.settings_fragment.ui.SettingsFragment
 import com.example.playlistmaker.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -23,28 +26,12 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.setTheme()
 
-        binding.buttonSearch.setOnClickListener {
-            startActivity(
-                Intent(
-                    this@MainActivity,
-                    SearchActivity::class.java
-                )
-            )
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        binding.buttonMediateka.setOnClickListener {
-            val intent = Intent(this, MediatekaActivity::class.java)
-            startActivity(intent)
-        }
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setupWithNavController(navController)
 
-        binding.buttonSettings.setOnClickListener {
-            startActivity(
-                Intent(
-                    this,
-                    SettingsActivity::class.java
-                )
-            )
-        }
     }
 
 }
