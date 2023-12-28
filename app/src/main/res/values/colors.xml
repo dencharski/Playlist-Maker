@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="dark_black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#0fa0a0</color>
 
     <color name="title_textColor">#FFFFFF</color>
     <color name="button_textColor">#1A1B22</color>

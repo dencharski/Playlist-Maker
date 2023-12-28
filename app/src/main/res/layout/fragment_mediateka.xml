@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".mediateka.ui.MediatekaFragment">
+
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_search_image">
+
+        <TextView
+            android:id="@+id/text_view_settings_toolbar"
+            style="@style/SettingsTextViewItemStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_settings_menu_start"
+            android:layout_marginTop="@dimen/margin_settings_menu_start"
+            android:layout_marginEnd="@dimen/margin_settings_menu_bottom"
+            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/mediateka"
+            android:textSize="@dimen/primary_text_size" />
+    </Toolbar>
+
+    <LinearLayout
+        android:id="@+id/content_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_search_image"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/MediatekaTabStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_search_layout_top_bottom"
+            android:layout_marginRight="@dimen/margin_search_layout_top_bottom"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="@dimen/search_track_button_refresh_text_size"
+            app:tabIndicatorFullWidth="true"
+            app:tabMode="fixed" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
+    </LinearLayout>
+</LinearLayout>

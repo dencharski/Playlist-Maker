@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".settings.ui.SettingsFragment">
+
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_search_image">
+
+        <TextView
+            android:id="@+id/text_view_settings_toolbar"
+            style="@style/SettingsTextViewItemStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_settings_menu_start"
+            android:layout_marginTop="@dimen/margin_settings_menu_start"
+            android:layout_marginEnd="@dimen/margin_settings_menu_bottom"
+            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/settings"
+            android:textSize="@dimen/primary_text_size" />
+    </Toolbar>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_dark_theme"
+        style="@style/SettingsLightDarkSwitchMaterial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/arrow_size"
+        android:layout_marginTop="@dimen/margin_settings_menu_top"
+        android:layout_marginEnd="@dimen/arrow_size"
+        android:layout_marginBottom="@dimen/button_corner_radius"
+        android:text="@string/dark_theme" />
+
+    <TextView
+        android:id="@+id/text_view_share"
+        style="@style/SettingsTextViewAndImageViewItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/arrow_size"
+        android:text="@string/shared_app"
+        app:drawableEndCompat="@drawable/baseline_share_24" />
+
+
+    <TextView
+        android:id="@+id/text_view_write_support"
+        style="@style/SettingsTextViewAndImageViewItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/arrow_size"
+        android:text="@string/write_support"
+        app:drawableEndCompat="@drawable/baseline_support_agent_24" />
+
+
+    <TextView
+        android:id="@+id/text_view_user_agreement"
+        style="@style/SettingsTextViewAndImageViewItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/arrow_size"
+        android:text="@string/user_agreement"
+        app:drawableEndCompat="@drawable/baseline_arrow_forward_ios_24" />
+</LinearLayout>
