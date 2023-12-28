@@ -16,11 +16,11 @@
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".audio_player_activity.ui.AudioPlayerActivity"
+            android:name=".audio_player.ui.AudioPlayerActivity"
             android:exported="false" />
 
         <activity
-            android:name=".main_activity.ui.MainActivity"
+            android:name=".main.ui.MainActivity"
             android:windowSoftInputMode="adjustNothing"
             android:exported="true">
             <intent-filter>

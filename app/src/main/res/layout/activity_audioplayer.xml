@@ -5,7 +5,7 @@
     style="@style/MainActivityColorStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".audio_player_activity.ui.AudioPlayerActivity">
+    tools:context=".audio_player.ui.AudioPlayerActivity">
 
     <ScrollView
         android:layout_width="match_parent"

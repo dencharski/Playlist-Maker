@@ -5,29 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".search_fragment.ui.SearchFragment">
+    tools:context=".search.ui.SearchFragment">
 
-    <LinearLayout
+    <Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_search_image"
-        android:orientation="horizontal">
+        android:layout_margin="@dimen/margin_search_image">
 
         <TextView
-            android:id="@+id/text_view_search"
+            android:id="@+id/text_view_settings_toolbar"
             style="@style/SettingsTextViewItemStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_settings_menu_start"
             android:layout_marginTop="@dimen/margin_settings_menu_start"
             android:layout_marginEnd="@dimen/margin_settings_menu_bottom"
-            android:layout_marginBottom="@dimen/margin_settings_menu_start"
-            android:layout_weight="1"
+            android:layout_marginBottom="@dimen/margin_settings_menu_bottom"
+            android:fontFamily="@font/ys_display_medium"
             android:text="@string/search"
             android:textSize="@dimen/primary_text_size" />
-
-
-    </LinearLayout>
+    </Toolbar>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -94,8 +91,7 @@
         android:id="@+id/layout_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_track_list"
@@ -205,8 +201,7 @@
         android:id="@+id/frame_layout_progressbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressbar_search"
@@ -214,7 +209,6 @@
             android:layout_height="@dimen/search_track_progressbar_size"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/player_small_gray_button_size"
-            android:indeterminateTint="@color/main_background_color"
-            />
+            android:indeterminateTint="@color/main_background_color" />
     </FrameLayout>
 </LinearLayout>
