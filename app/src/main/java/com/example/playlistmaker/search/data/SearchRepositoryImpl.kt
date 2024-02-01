@@ -15,10 +15,13 @@ import retrofit2.Response
 
 class SearchRepositoryImpl(private val iTunesSearchClient: ITunesSearchInterface?) :
     SearchRepository {
-    override fun searchTrack(text: String): Flow<Response<ResponseModel>?> = flow {
+    override fun searchTrack(text: String): Flow<ResponseModel?> = flow {
         emit(withContext(Dispatchers.IO) {
             try {
-                iTunesSearchClient?.search(text)
+                val result = iTunesSearchClient?.search(text)
+
+                if (result?.isSuccessful == true)  result.body() else null
+
             } catch (e: Throwable) {
                 null
             }

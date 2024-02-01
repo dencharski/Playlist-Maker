@@ -6,5 +6,5 @@ import retrofit2.Call
 import retrofit2.Response
 
 interface SearchInteractor {
-     fun searchTrack(text:String): Flow<Response<ResponseModel>?>
+     fun searchTrack(text:String): Flow<ResponseModel?>
 }

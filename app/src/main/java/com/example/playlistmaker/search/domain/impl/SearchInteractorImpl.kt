@@ -11,7 +11,7 @@ import retrofit2.Response
 
 class SearchInteractorImpl(private val searchRepository: SearchRepository) :
     SearchInteractor {
-    override fun searchTrack(text: String): Flow<Response<ResponseModel>?> {
+    override fun searchTrack(text: String): Flow<ResponseModel?> {
         return searchRepository.searchTrack(text)
     }
 }

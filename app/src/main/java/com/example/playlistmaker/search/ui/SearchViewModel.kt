@@ -32,7 +32,7 @@ class SearchViewModel(
     private var textTrack: String = ""
     private val _searchViewModelState = MutableLiveData<SearchViewState>()
     val searchViewModelState: LiveData<SearchViewState> get() = _searchViewModelState
-
+    private var searchJob: Job? = null
 
     init {
         Log.d(teg, "init")
@@ -57,24 +57,22 @@ class SearchViewModel(
     private fun searchTrack() {
         _searchViewModelState.postValue(SearchViewState.Loading)
 
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
             searchInteractor.searchTrack(textTrack)
                 .collect { response ->
                     if (response != null) {
-                        if (response.isSuccessful) {
-                            if (response.body()?.results?.size != 0) {
-                                _searchViewModelState.postValue(response.body()?.results?.let {
-                                    SearchViewState.SearchViewStateData(
-                                        trackList = it
-                                    )
-                                })
-                            } else {
-                                _searchViewModelState.postValue(SearchViewState.Empty)
-                            }
+                        if (response.results.size != 0) {
+                            _searchViewModelState.postValue(response.results.let {
+                                SearchViewState.SearchViewStateData(
+                                    trackList = it
+                                )
+                            })
                         } else {
-                            _searchViewModelState.postValue(SearchViewState.Error)
+                            _searchViewModelState.postValue(SearchViewState.Empty)
                         }
+
                     } else {
                         _searchViewModelState.postValue(SearchViewState.Error)
                     }
@@ -91,7 +89,7 @@ class SearchViewModel(
     }
 
     override fun onCleared() {
-
+        searchJob?.cancel()
     }
 
     companion object {
