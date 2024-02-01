@@ -3,8 +3,6 @@ package com.example.playlistmaker.search.ui
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,12 +12,15 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.App
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.audio_player.data.dto.TrackDto
 import com.example.playlistmaker.audio_player.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.SearchViewState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -35,7 +36,6 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
     private var trackListAdapterHistory: TrackListAdapterHistory? = null
 
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
 
 
     override fun onCreateView(
@@ -61,58 +61,56 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
 
         observeViewModelState()
 
-        binding.recyclerViewTrackListHistory?.adapter = trackListAdapterHistory
+        binding.recyclerViewTrackListHistory.adapter = trackListAdapterHistory
 
-        binding?.buttonCleanHistory?.setOnClickListener {
+        binding.buttonCleanHistory.setOnClickListener {
             searchViewModel.removeTrackListInSharedPreferences()
-            binding?.layoutSearchHistory?.visibility = View.GONE
+            binding.layoutSearchHistory.visibility = View.GONE
         }
 
         savedInstanceState?.let {
-            binding?.editTextSearch?.setText(it.getString(key))
+            binding.editTextSearch.setText(it.getString(key))
         }
 
-        binding?.imageViewClear?.setOnClickListener {
-            binding?.editTextSearch?.setText("")
+        binding.imageViewClear.setOnClickListener {
+            binding.editTextSearch.setText("")
 
-            binding?.layoutEmptyResult?.visibility = View.GONE
-            binding?.layoutNoInternetConnection?.visibility = View.GONE
+            binding.layoutEmptyResult.visibility = View.GONE
+            binding.layoutNoInternetConnection.visibility = View.GONE
 
 
             val inputMethodManager =
                 requireActivity().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(binding?.editTextSearch?.windowToken, 0)
+            inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
         }
 
+        binding.buttonRefresh.setOnClickListener { searchTrack(binding.editTextSearch.text.toString()) }
 
-
-        binding?.buttonRefresh?.setOnClickListener { searchTrack(binding?.editTextSearch?.text.toString()) }
-
-        binding?.editTextSearch?.addTextChangedListener(object : TextWatcher {
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
-                    binding?.imageViewClear?.visibility = View.GONE
+                    binding.imageViewClear.visibility = View.GONE
                     trackListAdapter?.setTrackList(arrayListOf())
                 } else {
                     searchViewModel.setTextTrack(s.toString())
-                    binding?.imageViewClear?.visibility = View.VISIBLE
+                    binding.imageViewClear.visibility = View.VISIBLE
                 }
 
-                if (binding?.editTextSearch?.hasFocus() == true && s?.isEmpty() == true) {
+                if (binding.editTextSearch.hasFocus() && s?.isEmpty() == true) {
                     Log.d(tag, "TextChangedListener focus - true")
                     if (trackListHistory.size != 0) {
-                        binding?.layoutSearchHistory?.visibility = View.VISIBLE
-                        binding?.layoutRecyclerView?.visibility = View.GONE
+                        binding.layoutSearchHistory.visibility = View.VISIBLE
+                        binding.layoutRecyclerView.visibility = View.GONE
                     } else {
                         Log.d(tag, "trackListHistory.itemCount == 0")
                     }
                 } else {
                     Log.d(tag, "TextChangedListener focus - false")
-                    binding?.layoutSearchHistory?.visibility = View.GONE
-                    binding?.layoutRecyclerView?.visibility = View.VISIBLE
+                    binding.layoutSearchHistory.visibility = View.GONE
+                    binding.layoutRecyclerView.visibility = View.VISIBLE
                 }
             }
 
@@ -120,19 +118,19 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
             }
         })
 
-        binding?.editTextSearch?.setOnEditorActionListener { _, actionId, _ ->
+        binding.editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 true
             }
             false
         }
 
-        binding?.editTextSearch?.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && binding?.editTextSearch?.text?.isEmpty() == true) {
+        binding.editTextSearch.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && binding.editTextSearch.text?.isEmpty() == true) {
                 Log.d(tag, "focus - true")
                 if (trackListAdapterHistory?.itemCount != 0) {
-                    binding?.layoutSearchHistory?.visibility = View.VISIBLE
-                    binding?.layoutRecyclerView?.visibility = View.GONE
+                    binding.layoutSearchHistory.visibility = View.VISIBLE
+                    binding.layoutRecyclerView.visibility = View.GONE
                 }
             } else {
                 Log.d(tag, "focus - false")
@@ -149,7 +147,6 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
 
     private fun searchTrack(text: String) {
         searchViewModel.setTextTrack(text)
-        searchViewModel.searchDebounce()
     }
 
     private fun observeViewModelState() {
@@ -177,36 +174,36 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
     }
 
     private fun showSuccessfulResult() {
-        binding?.layoutEmptyResult?.visibility = View.GONE
-        binding?.layoutNoInternetConnection?.visibility = View.GONE
-        binding?.layoutRecyclerView?.visibility = View.VISIBLE
-        binding?.frameLayoutProgressbar?.visibility = View.GONE
+        binding.layoutEmptyResult.visibility = View.GONE
+        binding.layoutNoInternetConnection.visibility = View.GONE
+        binding.layoutRecyclerView.visibility = View.VISIBLE
+        binding.frameLayoutProgressbar.visibility = View.GONE
     }
 
     private fun showStartNewRequestLoading() {
-        binding?.layoutEmptyResult?.visibility = View.GONE
-        binding?.layoutNoInternetConnection?.visibility = View.GONE
-        binding?.layoutRecyclerView?.visibility = View.GONE
-        binding?.frameLayoutProgressbar?.visibility = View.VISIBLE
+        binding.layoutEmptyResult.visibility = View.GONE
+        binding.layoutNoInternetConnection.visibility = View.GONE
+        binding.layoutRecyclerView.visibility = View.GONE
+        binding.frameLayoutProgressbar.visibility = View.VISIBLE
     }
 
     private fun showEmptyResult() {
-        binding?.layoutEmptyResult?.visibility = View.VISIBLE
-        binding?.layoutNoInternetConnection?.visibility = View.GONE
-        binding?.layoutRecyclerView?.visibility = View.GONE
-        binding?.frameLayoutProgressbar?.visibility = View.GONE
+        binding.layoutEmptyResult.visibility = View.VISIBLE
+        binding.layoutNoInternetConnection.visibility = View.GONE
+        binding.layoutRecyclerView.visibility = View.GONE
+        binding.frameLayoutProgressbar.visibility = View.GONE
     }
 
     private fun showErrorResult() {
-        binding?.layoutNoInternetConnection?.visibility = View.VISIBLE
-        binding?.layoutEmptyResult?.visibility = View.GONE
-        binding?.layoutRecyclerView?.visibility = View.GONE
-        binding?.frameLayoutProgressbar?.visibility = View.GONE
+        binding.layoutNoInternetConnection.visibility = View.VISIBLE
+        binding.layoutEmptyResult.visibility = View.GONE
+        binding.layoutRecyclerView.visibility = View.GONE
+        binding.frameLayoutProgressbar.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(key, binding?.editTextSearch?.text.toString())
+        outState.putString(key, binding.editTextSearch.text.toString())
     }
 
 
@@ -250,7 +247,10 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
         }
         return current
     }

@@ -5,11 +5,17 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audio_player.data.dto.TrackDto
 import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerState
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerViewState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -22,14 +28,8 @@ class AudioPlayerViewModel(
 
     private val _trackDtoApp = MutableLiveData<TrackDtoApp>()
     val trackDtoApp: LiveData<TrackDtoApp> get() = _trackDtoApp
-    private val handler = Handler(Looper.getMainLooper())
-    private val runnable = object : Runnable {
-        override fun run() {
-            refreshTimeNowPlay()
-            handler.postDelayed(this, REFRESH_LIST_DELAY_MILLIS)
-        }
-    }
 
+    private var refreshTimeJob: Job? = null
     fun setDataExtrasTrack(track: TrackDto?) {
         if (track != null) {
             _trackDtoApp.postValue(
@@ -67,7 +67,14 @@ class AudioPlayerViewModel(
     }
 
     private fun startPlayer() {
-        handler.postDelayed(runnable, REFRESH_LIST_DELAY_MILLIS)
+
+        refreshTimeJob = viewModelScope.launch {
+            while (audioPlayerInteractorImpl.getIsPlayingCompleted() == AudioPlayerState.STATE_PLAYING) {
+                delay(REFRESH_LIST_DELAY_MILLIS)
+                refreshTimeNowPlay()
+            }
+
+        }
         _audioPlayerViewState.postValue(AudioPlayerViewState.Play)
     }
 
@@ -92,7 +99,7 @@ class AudioPlayerViewModel(
     }
 
     private fun stopTimer() {
-        handler.removeCallbacks(runnable)
+        refreshTimeJob?.cancel()
     }
 
     fun onPause() {
@@ -109,6 +116,6 @@ class AudioPlayerViewModel(
     }
 
     companion object {
-        private const val REFRESH_LIST_DELAY_MILLIS = 500L
+        private const val REFRESH_LIST_DELAY_MILLIS = 300L
     }
 }
