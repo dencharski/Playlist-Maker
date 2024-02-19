@@ -4,9 +4,18 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.TrackDtoApp
+import com.example.playlistmaker.mediateka.data.db.TracksDatabase
+import com.example.playlistmaker.search.domain.models.ResponseModel
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
-class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val tracksDatabase: TracksDatabase
+) :
     SearchHistoryRepository {
 
     private val trackList = arrayListOf<TrackDtoApp>()
@@ -15,6 +24,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     init {
         trackList.addAll(read())
         addListId()
+
         Log.d(teg, "init ${trackListId.size}")
     }
 
@@ -40,10 +50,17 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
 
         trackList.clear()
         trackList.addAll(read())
+
         addListId()
     }
 
-    override fun getTrackList() = trackList
+    override fun getTrackList(): Flow<ArrayList<TrackDtoApp>> = flow {
+        emit(withContext(Dispatchers.IO) {
+            val listId = tracksDatabase.trackDao().getTracksIds()
+            map(trackList, listId)
+        })
+    }
+
     override fun removeTrackListInSharedPreferences() {
         sharedPreferences.edit()
             .remove(USER_LIST_KEY)
@@ -51,6 +68,22 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         trackList.clear()
         trackListId.clear()
         Log.d(teg, "remove sharedPreferences.size = ${read().size}")
+    }
+
+
+    private fun map(
+        listOfTrack: ArrayList<TrackDtoApp>,
+        listId: List<String>
+    ): ArrayList<TrackDtoApp> {
+
+        listOfTrack.forEach { result ->
+            listId.forEach { id ->
+                if (result.trackId.toString() == id) {
+                    result.isFavorite = true
+                }
+            }
+        }
+        return listOfTrack
     }
 
     private fun addListId() {

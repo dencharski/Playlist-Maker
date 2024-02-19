@@ -7,4 +7,5 @@ sealed class AudioPlayerViewState {
     object PlayCompleted:AudioPlayerViewState()
     object Error : AudioPlayerViewState()
     data class CurrentPosition(val currentPosition: String = "00:00") : AudioPlayerViewState()
+    data class AddFavoriteClick(var isFavorite: Boolean = false) : AudioPlayerViewState()
 }

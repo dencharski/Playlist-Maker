@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.Parceler
 import java.text.SimpleDateFormat
@@ -18,7 +19,8 @@ data class TrackDtoApp(
     val releaseDate: String = "",
     val primaryGenreName: String = "",
     val country: String = "",
-    val previewUrl:String =""
+    val previewUrl:String ="",
+    var isFavorite: Boolean = false
 ) : Parcelable {
 
 
@@ -33,14 +35,20 @@ data class TrackDtoApp(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        parcel.readString().toString()
+        parcel.readString().toString(),
+        parcel.readBoolean()
     ) {
     }
 
     val artworkUrl512
         get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     fun getTrackTime(): String? {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLongOrNull())
+
+        try {
+            return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLongOrNull())
+        }catch (e:Exception){
+            return trackTimeMillis
+        }
     }
 
     companion object : Parceler<TrackDtoApp> {
@@ -56,6 +64,7 @@ data class TrackDtoApp(
             parcel.writeString(primaryGenreName)
             parcel.writeString(country)
             parcel.writeString(previewUrl)
+            parcel.writeBoolean(isFavorite)
         }
 
         override fun create(parcel: Parcel): TrackDtoApp {

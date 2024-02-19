@@ -2,9 +2,14 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.example.playlistmaker.audio_player.data.AudioPlayerRepositoryImpl
+import androidx.room.Room
+import com.example.playlistmaker.audio_player.data.impl.AudioPlayerFavoriteTrackRepositoryImpl
+import com.example.playlistmaker.audio_player.data.impl.AudioPlayerRepositoryImpl
+import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackInteractor
+import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackRepository
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerRepository
+import com.example.playlistmaker.audio_player.domain.impl.AudioPlayerFavoriteTrackInteractorImpl
 import com.example.playlistmaker.audio_player.domain.impl.AudioPlayerInteractorImpl
 import com.example.playlistmaker.audio_player.ui.AudioPlayerViewModel
 import com.example.playlistmaker.main.data.MainRepositoryImpl
@@ -12,6 +17,12 @@ import com.example.playlistmaker.main.domain.MainInteractorImpl
 import com.example.playlistmaker.main.domain.api.MainInteractor
 import com.example.playlistmaker.main.domain.api.MainRepository
 import com.example.playlistmaker.main.ui.MainViewModel
+import com.example.playlistmaker.mediateka.data.SelectedTracksRepositoryImpl
+import com.example.playlistmaker.mediateka.data.TrackDbConvertor
+import com.example.playlistmaker.mediateka.data.db.TracksDatabase
+import com.example.playlistmaker.mediateka.domain.api.SelectedTrackInteractor
+import com.example.playlistmaker.mediateka.domain.api.SelectedTracksRepository
+import com.example.playlistmaker.mediateka.domain.impl.SelectedTrackInteractorImpl
 import com.example.playlistmaker.mediateka.ui.MediatekaViewModel
 import com.example.playlistmaker.mediateka.ui.PlayListsViewModel
 import com.example.playlistmaker.mediateka.ui.SelectedTracksViewModel
@@ -67,13 +78,28 @@ object DependencyModule {
 
         single { MediaPlayer() }
 
+        single {
+            Room.databaseBuilder(androidContext(), TracksDatabase::class.java, "database.db")
+                .build()
+        }
+
     }
     val repositoryModule = module {
         single<AudioPlayerRepository> { AudioPlayerRepositoryImpl(get()) }
-        single<SearchRepository> { SearchRepositoryImpl(get()) }
-        single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get()) }
+        single<SearchRepository> { SearchRepositoryImpl(get(), get()) }
+        single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get(), get()) }
         single<SettingsRepository> { SettingsRepositoryImpl(get()) }
         single<MainRepository> { MainRepositoryImpl(get()) }
+        single<SelectedTracksRepository> { SelectedTracksRepositoryImpl(get(), get()) }
+
+        factory { TrackDbConvertor() }
+
+        single<AudioPlayerFavoriteTrackRepository> {
+            AudioPlayerFavoriteTrackRepositoryImpl(
+                get(),
+                get()
+            )
+        }
     }
     val interactorModule = module {
         single<AudioPlayerInteractor> { AudioPlayerInteractorImpl(get()) }
@@ -81,14 +107,16 @@ object DependencyModule {
         single<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get()) }
         single<SettingsInteractor> { SettingsInteractorImpl(get()) }
         single<MainInteractor> { MainInteractorImpl(get()) }
+        single<AudioPlayerFavoriteTrackInteractor> { AudioPlayerFavoriteTrackInteractorImpl(get()) }
+        single <SelectedTrackInteractor>{ SelectedTrackInteractorImpl(get()) }
     }
     val viewModelModule = module {
-        viewModel { AudioPlayerViewModel(get()) }
+        viewModel { AudioPlayerViewModel(get(), get()) }
         viewModel { MainViewModel(get()) }
         viewModel { MediatekaViewModel() }
         viewModel { SearchViewModel(get(), get()) }
         viewModel { SettingsViewModel(get()) }
-        viewModel { SelectedTracksViewModel() }
+        viewModel { SelectedTracksViewModel(get()) }
         viewModel { PlayListsViewModel() }
     }
 }

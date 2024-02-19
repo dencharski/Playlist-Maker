@@ -44,7 +44,16 @@ class AudioPlayerActivity : AppCompatActivity() {
             audioPlayerViewModel.playbackControl()
         }
 
+        binding?.imageButtonLikeItCheck?.setOnClickListener {
+            audioPlayerViewModel.onFavoriteClicked()
+        }
+
+        binding?.imageButtonLikeItNotCheck?.setOnClickListener {
+            audioPlayerViewModel.onFavoriteClicked()
+        }
+
     }
+
 
     private fun observeValues() {
 
@@ -54,6 +63,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding?.imageButtonPlayTrack?.visibility = View.VISIBLE
             binding?.imageButtonPauseTrack?.visibility = View.INVISIBLE
             binding?.textViewTrackTimeNowPlay?.text = ZERO_VAL
+
         }
 
         audioPlayerViewModel.audioPlayerViewState.observe(this) {
@@ -82,7 +92,21 @@ class AudioPlayerActivity : AppCompatActivity() {
                     binding?.textViewTrackTimeNowPlay?.text = ZERO_VAL
                 }
 
+                is AudioPlayerViewState.AddFavoriteClick -> {
+                    if (it.isFavorite) {
+
+                        binding?.imageButtonLikeItCheck?.visibility = View.VISIBLE
+                        binding?.imageButtonLikeItNotCheck?.visibility = View.INVISIBLE
+                    } else {
+
+                        binding?.imageButtonLikeItCheck?.visibility = View.INVISIBLE
+                        binding?.imageButtonLikeItNotCheck?.visibility = View.VISIBLE
+                    }
+
+                }
+
                 else -> {
+                    Log.d(tag, "smth wrong")
                 }
             }
         }
@@ -107,6 +131,16 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding?.textViewReleaseDate?.text = track.releaseDate
         binding?.textViewPrimaryGenreName?.text = track.primaryGenreName
         binding?.textViewCountry?.text = track.country
+
+        if (track.isFavorite) {
+
+            binding?.imageButtonLikeItCheck?.visibility = View.VISIBLE
+            binding?.imageButtonLikeItNotCheck?.visibility = View.INVISIBLE
+        } else {
+
+            binding?.imageButtonLikeItCheck?.visibility = View.INVISIBLE
+            binding?.imageButtonLikeItNotCheck?.visibility = View.VISIBLE
+        }
 
 
     }

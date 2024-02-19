@@ -2,13 +2,15 @@ package com.example.playlistmaker.audio_player.data.dto
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
+import okio.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Parcelize
-data class TrackDto(
+data class TrackDtoAudioPlayer(
     val trackId: Long,
     val trackName: String = "",
     val artistName: String = "",
@@ -18,7 +20,8 @@ data class TrackDto(
     val releaseDate: String = "",
     val primaryGenreName: String = "",
     val country: String = "",
-    val previewUrl:String =""
+    val previewUrl:String ="",
+    var isFavorite: Boolean =false
 ): Parcelable {
 
     val artworkUrl512
@@ -36,17 +39,24 @@ data class TrackDto(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        parcel.readString().toString()
+        parcel.readString().toString(),
+        parcel.readBoolean()
     ) {
     }
 
     fun getTrackTime(): String? {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLongOrNull())
+        Log.d("teg", "trackTimeMills = ${trackTimeMillis}")
+        try {
+            return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLongOrNull())
+        }catch (e :Exception){
+            return trackTimeMillis
+        }
+
     }
 
-    companion object : Parceler<TrackDto> {
+    companion object : Parceler<TrackDtoAudioPlayer> {
 
-        override fun TrackDto.write(parcel: Parcel, flags: Int) {
+        override fun TrackDtoAudioPlayer.write(parcel: Parcel, flags: Int) {
             parcel.writeLong(trackId)
             parcel.writeString(trackName)
             parcel.writeString(artistName)
@@ -57,10 +67,11 @@ data class TrackDto(
             parcel.writeString(primaryGenreName)
             parcel.writeString(country)
             parcel.writeString(previewUrl)
+            parcel.writeBoolean(isFavorite)
         }
 
-        override fun create(parcel: Parcel): TrackDto {
-            return TrackDto(parcel)
+        override fun create(parcel: Parcel): TrackDtoAudioPlayer {
+            return TrackDtoAudioPlayer(parcel)
         }
     }
 

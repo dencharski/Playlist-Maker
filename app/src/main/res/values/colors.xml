@@ -15,4 +15,5 @@
     <color name="main_background_color_night">#1A1B22</color>
     <color name="main_background_color_light">#79A7FF</color>
     <color name="search_layout_color">#E6E8EB</color>
+    <color name="red_selected_color">#F56B6C</color>
 </resources>

@@ -46,7 +46,17 @@ class SearchViewModel(
     }
 
     private fun getHistoryTrackList() {
-        _searchViewModelState.postValue(SearchViewState.SearchViewStateDataHistory(trackListHistory = searchHistoryInteractor.getTrackList()))
+
+        viewModelScope.launch {
+            searchHistoryInteractor.getTrackList().collect {
+                _searchViewModelState.postValue(
+                    SearchViewState.SearchViewStateDataHistory(
+                        trackListHistory = it
+                    )
+                )
+            }
+        }
+
     }
 
     fun removeTrackListInSharedPreferences() {

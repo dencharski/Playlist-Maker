@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.domain.impl
 
+import com.example.playlistmaker.TrackDtoApp
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.ResponseModel

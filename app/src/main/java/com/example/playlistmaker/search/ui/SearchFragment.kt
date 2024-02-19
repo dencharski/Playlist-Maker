@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.App
 import com.example.playlistmaker.TrackDtoApp
-import com.example.playlistmaker.audio_player.data.dto.TrackDto
+import com.example.playlistmaker.audio_player.data.dto.TrackDtoAudioPlayer
 import com.example.playlistmaker.audio_player.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.SearchViewState
@@ -227,7 +227,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
         )
 
         intent.putExtra(
-            App.trackKey, TrackDto(
+            App.trackKey, TrackDtoAudioPlayer(
                 track.trackId,
                 track.trackName,
                 track.artistName,
@@ -237,7 +237,8 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
                 track.releaseDate,
                 track.primaryGenreName,
                 track.country,
-                track.previewUrl
+                track.previewUrl,
+                track.isFavorite
             )
         )
         startActivity(intent)
