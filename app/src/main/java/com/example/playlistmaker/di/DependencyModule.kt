@@ -3,8 +3,8 @@ package com.example.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
-import com.example.playlistmaker.audio_player.data.impl.AudioPlayerFavoriteTrackRepositoryImpl
-import com.example.playlistmaker.audio_player.data.impl.AudioPlayerRepositoryImpl
+import com.example.playlistmaker.audio_player.data.AudioPlayerFavoriteTrackRepositoryImpl
+import com.example.playlistmaker.audio_player.data.AudioPlayerRepositoryImpl
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackInteractor
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackRepository
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerInteractor
@@ -28,6 +28,7 @@ import com.example.playlistmaker.mediateka.ui.PlayListsViewModel
 import com.example.playlistmaker.mediateka.ui.SelectedTracksViewModel
 import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.SearchRepositoryImpl
+import com.example.playlistmaker.search.data.TrackHistoryConvertor
 import com.example.playlistmaker.search.data.network.ITunesSearchInterface
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
@@ -90,13 +91,13 @@ object DependencyModule {
         single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get(), get()) }
         single<SettingsRepository> { SettingsRepositoryImpl(get()) }
         single<MainRepository> { MainRepositoryImpl(get()) }
-        single<SelectedTracksRepository> { SelectedTracksRepositoryImpl(get(), get()) }
+        single<SelectedTracksRepository> { SelectedTracksRepositoryImpl(get()) }
 
         factory { TrackDbConvertor() }
+        factory { TrackHistoryConvertor() }
 
         single<AudioPlayerFavoriteTrackRepository> {
             AudioPlayerFavoriteTrackRepositoryImpl(
-                get(),
                 get()
             )
         }
@@ -104,11 +105,16 @@ object DependencyModule {
     val interactorModule = module {
         single<AudioPlayerInteractor> { AudioPlayerInteractorImpl(get()) }
         single<SearchInteractor> { SearchInteractorImpl(get()) }
-        single<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get()) }
+        single<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get(), get()) }
         single<SettingsInteractor> { SettingsInteractorImpl(get()) }
         single<MainInteractor> { MainInteractorImpl(get()) }
-        single<AudioPlayerFavoriteTrackInteractor> { AudioPlayerFavoriteTrackInteractorImpl(get()) }
-        single <SelectedTrackInteractor>{ SelectedTrackInteractorImpl(get()) }
+        single<AudioPlayerFavoriteTrackInteractor> {
+            AudioPlayerFavoriteTrackInteractorImpl(
+                get(),
+                get()
+            )
+        }
+        single<SelectedTrackInteractor> { SelectedTrackInteractorImpl(get(), get()) }
     }
     val viewModelModule = module {
         viewModel { AudioPlayerViewModel(get(), get()) }

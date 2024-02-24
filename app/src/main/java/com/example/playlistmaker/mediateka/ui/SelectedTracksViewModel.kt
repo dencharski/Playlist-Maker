@@ -1,6 +1,7 @@
 package com.example.playlistmaker.mediateka.ui
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,11 +12,8 @@ import kotlinx.coroutines.launch
 class SelectedTracksViewModel(private val selectedTrackInteractor: SelectedTrackInteractor) :
     ViewModel() {
     private val _selectedTracksViewState = MutableLiveData<SelectedTracksViewState>()
-    val selectedTracksViewState get() = _selectedTracksViewState
+    val selectedTracksViewState: LiveData<SelectedTracksViewState> get() = _selectedTracksViewState
 
-    init {
-        Log.d("tag", "init fun getSelectedTracks()")
-    }
 
     fun getSelectedTracks() {
 

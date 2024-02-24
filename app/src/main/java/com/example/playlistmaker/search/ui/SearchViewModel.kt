@@ -1,29 +1,18 @@
 package com.example.playlistmaker.search.ui
 
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.search.domain.models.ResponseModel
 import com.example.playlistmaker.search.domain.models.SearchViewState
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchInteractor
-import com.example.playlistmaker.TrackDtoApp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
 
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
@@ -33,25 +22,20 @@ class SearchViewModel(
     private val _searchViewModelState = MutableLiveData<SearchViewState>()
     val searchViewModelState: LiveData<SearchViewState> get() = _searchViewModelState
     private var searchJob: Job? = null
-
-    init {
-        Log.d(teg, "init")
-        getHistoryTrackList()
-    }
-
+    private var searchTrackResultList = arrayListOf<TrackDtoApp>()
 
     fun writeOneTrack(track: TrackDtoApp) {
         searchHistoryInteractor.writeOneTrack(track)
         getHistoryTrackList()
     }
 
-    private fun getHistoryTrackList() {
+    fun getHistoryTrackList() {
 
         viewModelScope.launch {
             searchHistoryInteractor.getTrackList().collect {
                 _searchViewModelState.postValue(
                     SearchViewState.SearchViewStateDataHistory(
-                        trackListHistory = it
+                        trackListHistory = it as ArrayList<TrackDtoApp>
                     )
                 )
             }
@@ -66,7 +50,6 @@ class SearchViewModel(
 
     private fun searchTrack() {
         _searchViewModelState.postValue(SearchViewState.Loading)
-
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
@@ -74,11 +57,12 @@ class SearchViewModel(
                 .collect { response ->
                     if (response != null) {
                         if (response.results.size != 0) {
-                            _searchViewModelState.postValue(response.results.let {
+                            searchTrackResultList = response.results
+                            _searchViewModelState.postValue(
                                 SearchViewState.SearchViewStateData(
-                                    trackList = it
+                                    trackList = searchTrackResultList
                                 )
-                            })
+                            )
                         } else {
                             _searchViewModelState.postValue(SearchViewState.Empty)
                         }
@@ -89,13 +73,33 @@ class SearchViewModel(
                 }
         }
 
-
     }
 
     fun setTextTrack(text: String) {
         textTrack = text
         searchTrack()
+    }
 
+    fun refreshTrackDatabaseStatus() {
+        viewModelScope.launch {
+            searchInteractor.refreshTrackDatabaseStatus().collect { response ->
+                if (response != null) {
+                    if (response.results.size != 0) {
+                        searchTrackResultList = response.results
+                        _searchViewModelState.postValue(
+                            SearchViewState.SearchViewStateData(
+                                trackList = searchTrackResultList
+                            )
+                        )
+                    } else {
+                        _searchViewModelState.postValue(SearchViewState.Empty)
+                    }
+
+                } else {
+                    _searchViewModelState.postValue(SearchViewState.Error)
+                }
+            }
+        }
     }
 
     override fun onCleared() {

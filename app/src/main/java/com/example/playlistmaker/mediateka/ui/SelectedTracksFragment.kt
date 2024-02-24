@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.App
-import com.example.playlistmaker.TrackDtoApp
-import com.example.playlistmaker.audio_player.data.dto.TrackDtoAudioPlayer
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
 import com.example.playlistmaker.audio_player.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.FragmentSelectedTracksBinding
 import com.example.playlistmaker.mediateka.domain.models.SelectedTracksViewState
@@ -79,10 +77,7 @@ class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
                 }
 
                 is SelectedTracksViewState.ListSelectedTracks -> {
-
-
                     selectedTrackListAdapter?.setTrackList(it.list as ArrayList<TrackDtoApp>)
-
                     binding.imageViewEmptyResult.visibility = View.INVISIBLE
                     binding.textView.visibility = View.INVISIBLE
                     binding.layoutRecyclerView.visibility = View.VISIBLE
@@ -107,19 +102,7 @@ class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
         )
 
         intent.putExtra(
-            App.trackKey, TrackDtoAudioPlayer(
-                track.trackId,
-                track.trackName,
-                track.artistName,
-                track.trackTimeMillis,
-                track.artworkUrl100,
-                track.collectionName,
-                track.releaseDate,
-                track.primaryGenreName,
-                track.country,
-                track.previewUrl,
-                track.isFavorite
-            )
+            App.trackKey,track
         )
         startActivity(intent)
     }

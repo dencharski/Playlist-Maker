@@ -1,14 +1,12 @@
-package com.example.playlistmaker.mediateka.data
-
+package com.example.playlistmaker.search.data
 
 import com.example.playlistmaker.main.domain.models.TrackDtoApp
-import com.example.playlistmaker.mediateka.data.db.TrackEntity
+import com.example.playlistmaker.search.data.dto.TrackHistoryDto
 
-
-class TrackDbConvertor {
-    fun map(track: TrackDtoApp): TrackEntity {
-        return TrackEntity(
-            trackId = track.trackId.toString(),
+class TrackHistoryConvertor {
+    fun map(track: TrackDtoApp): TrackHistoryDto {
+        return TrackHistoryDto(
+            trackId = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -21,8 +19,9 @@ class TrackDbConvertor {
         )
     }
 
-    fun map(track: TrackEntity): TrackDtoApp {
-        return TrackDtoApp(trackId = track.trackId.toLong(),
+    fun map(track: TrackHistoryDto): TrackDtoApp {
+        return TrackDtoApp(
+            trackId = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -32,6 +31,6 @@ class TrackDbConvertor {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            isFavorite = true)
+            isFavorite = track.isFavorite)
     }
 }

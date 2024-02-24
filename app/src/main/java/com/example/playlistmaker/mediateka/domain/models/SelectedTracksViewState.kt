@@ -1,7 +1,6 @@
 package com.example.playlistmaker.mediateka.domain.models
 
-import com.example.playlistmaker.TrackDtoApp
-import com.example.playlistmaker.audio_player.domain.models.AudioPlayerViewState
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
 
 sealed class SelectedTracksViewState {
 

@@ -1,14 +1,11 @@
 package com.example.playlistmaker.audio_player.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerInteractor
-import com.example.playlistmaker.audio_player.data.dto.TrackDtoAudioPlayer
-import com.example.playlistmaker.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackInteractor
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerState
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerViewState
@@ -49,25 +46,9 @@ class AudioPlayerViewModel(
         }
     }
 
-    fun setDataExtrasTrack(track: TrackDtoAudioPlayer?) {
+    fun setDataExtrasTrack(track: TrackDtoApp?) {
         if (track != null) {
-
-            _trackDtoApp.postValue(
-                TrackDtoApp(
-                    track.trackId,
-                    track.trackName,
-                    track.artistName,
-                    track.getTrackTime().toString(),
-                    track.artworkUrl100,
-                    track.collectionName,
-                    track.releaseDate,
-                    track.primaryGenreName,
-                    track.country,
-                    track.previewUrl,
-                    track.isFavorite
-                )
-            )
-
+            _trackDtoApp.postValue(track!!)
             audioPlayerInteractorImpl.setTrack(track.previewUrl)
         } else {
             setAudioPlayerViewStateError()
