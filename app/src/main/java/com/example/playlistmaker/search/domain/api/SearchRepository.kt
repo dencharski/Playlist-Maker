@@ -7,5 +7,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 interface SearchRepository {
-     fun searchTrack(text:String): Flow<ResponseModel?>
+    suspend fun searchTrack(text:String): Flow<ResponseModel?>
+    suspend fun getTrackIds():List<String>
+    suspend fun refreshTrackDatabaseStatus():Flow<ResponseModel?>
 }

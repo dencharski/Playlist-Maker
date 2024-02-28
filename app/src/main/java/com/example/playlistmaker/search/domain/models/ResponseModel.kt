@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.domain.models
 
-import com.example.playlistmaker.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
 
 data class ResponseModel(
     val resultCount: String,

@@ -1,26 +1,23 @@
 package com.example.playlistmaker.audio_player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerInteractor
-import com.example.playlistmaker.audio_player.data.dto.TrackDto
-import com.example.playlistmaker.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
+import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackInteractor
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerState
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerViewState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerViewModel(
-    private val audioPlayerInteractorImpl: AudioPlayerInteractor
+    private val audioPlayerInteractorImpl: AudioPlayerInteractor,
+    private val audioPlayerFavoriteTrackInteractor: AudioPlayerFavoriteTrackInteractor
 ) : ViewModel() {
 
     private val _audioPlayerViewState = MutableLiveData<AudioPlayerViewState>()
@@ -30,23 +27,28 @@ class AudioPlayerViewModel(
     val trackDtoApp: LiveData<TrackDtoApp> get() = _trackDtoApp
 
     private var refreshTimeJob: Job? = null
-    fun setDataExtrasTrack(track: TrackDto?) {
-        if (track != null) {
-            _trackDtoApp.postValue(
-                TrackDtoApp(
-                    track.trackId,
-                    track.trackName,
-                    track.artistName,
-                    track.getTrackTime().toString(),
-                    track.artworkUrl100,
-                    track.collectionName,
-                    track.releaseDate,
-                    track.primaryGenreName,
-                    track.country,
-                    track.previewUrl
-                )
-            )
 
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            if (_trackDtoApp.value?.isFavorite == false) {
+
+                audioPlayerFavoriteTrackInteractor.insertOneTrack(_trackDtoApp.value!!)
+                _audioPlayerViewState.postValue(AudioPlayerViewState.AddFavoriteClick(isFavorite = true))
+                _trackDtoApp.value?.isFavorite=true
+
+            } else {
+
+                _trackDtoApp.value?.let { audioPlayerFavoriteTrackInteractor.deleteOneTrack(it) }
+                _audioPlayerViewState.postValue(AudioPlayerViewState.AddFavoriteClick(isFavorite = false))
+                _trackDtoApp.value?.isFavorite=false
+
+            }
+        }
+    }
+
+    fun setDataExtrasTrack(track: TrackDtoApp?) {
+        if (track != null) {
+            _trackDtoApp.postValue(track!!)
             audioPlayerInteractorImpl.setTrack(track.previewUrl)
         } else {
             setAudioPlayerViewStateError()

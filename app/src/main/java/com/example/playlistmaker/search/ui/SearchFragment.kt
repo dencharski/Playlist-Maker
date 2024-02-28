@@ -14,8 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.App
-import com.example.playlistmaker.TrackDtoApp
-import com.example.playlistmaker.audio_player.data.dto.TrackDto
+import com.example.playlistmaker.main.domain.models.TrackDtoApp
 import com.example.playlistmaker.audio_player.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.SearchViewState
@@ -28,7 +27,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
     TrackListAdapterHistory.ItemClickInterfaceHistory {
 
     private var _binding: FragmentSearchBinding? = null
-    private val binding:FragmentSearchBinding get() = _binding!!
+    private val binding: FragmentSearchBinding get() = _binding!!
 
     private val searchViewModel by viewModel<SearchViewModel>()
 
@@ -206,6 +205,15 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
         outState.putString(key, binding.editTextSearch.text.toString())
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        searchViewModel.getHistoryTrackList()
+        if (binding.editTextSearch.text.isNotEmpty()) {
+            searchViewModel.refreshTrackDatabaseStatus()
+        }
+
+    }
 
     override fun onItemClick(track: TrackDtoApp) {
         if (clickDebounce()) {
@@ -227,18 +235,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
         )
 
         intent.putExtra(
-            App.trackKey, TrackDto(
-                track.trackId,
-                track.trackName,
-                track.artistName,
-                track.trackTimeMillis,
-                track.artworkUrl100,
-                track.collectionName,
-                track.releaseDate,
-                track.primaryGenreName,
-                track.country,
-                track.previewUrl
-            )
+            App.trackKey, track
         )
         startActivity(intent)
     }
