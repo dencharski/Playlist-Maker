@@ -12,16 +12,28 @@ import com.example.playlistmaker.audio_player.domain.api.AudioPlayerRepository
 import com.example.playlistmaker.audio_player.domain.impl.AudioPlayerFavoriteTrackInteractorImpl
 import com.example.playlistmaker.audio_player.domain.impl.AudioPlayerInteractorImpl
 import com.example.playlistmaker.audio_player.ui.AudioPlayerViewModel
+import com.example.playlistmaker.create_playlist.data.CreatePlayListRepositoryImpl
+import com.example.playlistmaker.create_playlist.data.CreatePlayListDbConvertor
+import com.example.playlistmaker.create_playlist.domain.api.CreatePlayListInteractor
+import com.example.playlistmaker.create_playlist.domain.api.CreatePlayListRepository
+import com.example.playlistmaker.create_playlist.domain.impl.CreatePlayListInteractorImpl
+import com.example.playlistmaker.create_playlist.ui.CreatePlaylistViewModel
 import com.example.playlistmaker.main.data.MainRepositoryImpl
 import com.example.playlistmaker.main.domain.MainInteractorImpl
 import com.example.playlistmaker.main.domain.api.MainInteractor
 import com.example.playlistmaker.main.domain.api.MainRepository
 import com.example.playlistmaker.main.ui.MainViewModel
+import com.example.playlistmaker.mediateka.data.AddTrackInPlayListRepositoryImpl
+import com.example.playlistmaker.mediateka.data.PlayListRepositoryImpl
 import com.example.playlistmaker.mediateka.data.SelectedTracksRepositoryImpl
 import com.example.playlistmaker.mediateka.data.TrackDbConvertor
 import com.example.playlistmaker.mediateka.data.db.TracksDatabase
+import com.example.playlistmaker.mediateka.domain.api.AddTrackInPlayListRepository
+import com.example.playlistmaker.mediateka.domain.api.PlayListInteractor
+import com.example.playlistmaker.mediateka.domain.api.PlayListRepository
 import com.example.playlistmaker.mediateka.domain.api.SelectedTrackInteractor
 import com.example.playlistmaker.mediateka.domain.api.SelectedTracksRepository
+import com.example.playlistmaker.mediateka.domain.impl.PlayListInteractorImpl
 import com.example.playlistmaker.mediateka.domain.impl.SelectedTrackInteractorImpl
 import com.example.playlistmaker.mediateka.ui.MediatekaViewModel
 import com.example.playlistmaker.mediateka.ui.PlayListsViewModel
@@ -101,6 +113,10 @@ object DependencyModule {
                 get()
             )
         }
+        single <CreatePlayListRepository>{ CreatePlayListRepositoryImpl(get())  }
+        factory { CreatePlayListDbConvertor() }
+        single <PlayListRepository>{ PlayListRepositoryImpl(get()) }
+        single <AddTrackInPlayListRepository>{ AddTrackInPlayListRepositoryImpl(get()) }
     }
     val interactorModule = module {
         single<AudioPlayerInteractor> { AudioPlayerInteractorImpl(get()) }
@@ -115,14 +131,18 @@ object DependencyModule {
             )
         }
         single<SelectedTrackInteractor> { SelectedTrackInteractorImpl(get(), get()) }
+        single <CreatePlayListInteractor>{ CreatePlayListInteractorImpl(get(),get()) }
+        single <PlayListInteractor> { PlayListInteractorImpl(get(),get(),get(),get()) }
+
     }
     val viewModelModule = module {
-        viewModel { AudioPlayerViewModel(get(), get()) }
+        viewModel { AudioPlayerViewModel(get(), get(),get()) }
         viewModel { MainViewModel(get()) }
         viewModel { MediatekaViewModel() }
         viewModel { SearchViewModel(get(), get()) }
         viewModel { SettingsViewModel(get()) }
         viewModel { SelectedTracksViewModel(get()) }
-        viewModel { PlayListsViewModel() }
+        viewModel { PlayListsViewModel(get()) }
+        viewModel { CreatePlaylistViewModel(get()) }
     }
 }

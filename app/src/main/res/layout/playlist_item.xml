@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_search_image"
+    android:layout_marginTop="@dimen/margin_settings_menu_start"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        style="@style/PlayListItemViewCardStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/margin_search_layout_top_bottom"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/image_view_playlist_image"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rectangle_no_color_for_item_view"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/text_view_playlist_name"
+        style="@style/PlayListItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_search_image"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="yfpdfybt" />
+
+    <TextView
+        android:id="@+id/text_view_playlist_size"
+        style="@style/PlayListItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_search_image"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="hfpvth" />
+
+</LinearLayout>

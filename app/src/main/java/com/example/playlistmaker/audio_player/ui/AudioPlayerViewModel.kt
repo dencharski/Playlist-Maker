@@ -9,6 +9,8 @@ import com.example.playlistmaker.main.domain.models.TrackDtoApp
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerFavoriteTrackInteractor
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerState
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerViewState
+import com.example.playlistmaker.create_playlist.domain.models.PlayList
+import com.example.playlistmaker.mediateka.domain.api.PlayListInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,7 +19,8 @@ import java.util.Locale
 
 class AudioPlayerViewModel(
     private val audioPlayerInteractorImpl: AudioPlayerInteractor,
-    private val audioPlayerFavoriteTrackInteractor: AudioPlayerFavoriteTrackInteractor
+    private val audioPlayerFavoriteTrackInteractor: AudioPlayerFavoriteTrackInteractor,
+    private val playListInteractor: PlayListInteractor
 ) : ViewModel() {
 
     private val _audioPlayerViewState = MutableLiveData<AudioPlayerViewState>()
@@ -28,26 +31,69 @@ class AudioPlayerViewModel(
 
     private var refreshTimeJob: Job? = null
 
+    private var _currentTrackId: Long = -1
+
     fun onFavoriteClicked() {
         viewModelScope.launch {
             if (_trackDtoApp.value?.isFavorite == false) {
 
                 audioPlayerFavoriteTrackInteractor.insertOneTrack(_trackDtoApp.value!!)
                 _audioPlayerViewState.postValue(AudioPlayerViewState.AddFavoriteClick(isFavorite = true))
-                _trackDtoApp.value?.isFavorite=true
+                _trackDtoApp.value?.isFavorite = true
 
             } else {
 
                 _trackDtoApp.value?.let { audioPlayerFavoriteTrackInteractor.deleteOneTrack(it) }
                 _audioPlayerViewState.postValue(AudioPlayerViewState.AddFavoriteClick(isFavorite = false))
-                _trackDtoApp.value?.isFavorite=false
+                _trackDtoApp.value?.isFavorite = false
 
             }
         }
     }
 
+    fun getListOfPlayLists() {
+        viewModelScope.launch {
+            playListInteractor.getListOfPlayLists().collect {
+                if (it.isEmpty()) {
+                    _audioPlayerViewState.postValue(AudioPlayerViewState.ListOfPlayListsIsEmpty)
+                } else {
+                    _audioPlayerViewState.postValue(AudioPlayerViewState.ListOfPlayLists(list = it))
+                }
+
+            }
+        }
+    }
+
+    fun checkTrackInPlaylist(playList: PlayList) {
+        if (playList.listOfTrackIds.contains(_currentTrackId)) {
+            _audioPlayerViewState.postValue(AudioPlayerViewState.PlayListContainTrack)
+        } else {
+            insertChangesInPlayListAndTrack(playList)
+            _audioPlayerViewState.postValue(AudioPlayerViewState.AddTrackInPlayList(playList.playListName))
+        }
+    }
+
+    private fun insertChangesInPlayListAndTrack(playList: PlayList) {
+        _trackDtoApp.value?.let { addTrackInPlayListTable(it) }
+
+        addPlayListWithNewListOfTrackIds(playList)
+    }
+
+    private fun addPlayListWithNewListOfTrackIds(playList: PlayList) {
+        viewModelScope.launch {
+            playListInteractor.insertTrackIdInPlaylist(playList, _currentTrackId)
+        }
+    }
+
+    private fun addTrackInPlayListTable(track: TrackDtoApp) {
+        viewModelScope.launch {
+            playListInteractor.insertTrackDtoAppInPlayList(track)
+        }
+    }
+
     fun setDataExtrasTrack(track: TrackDtoApp?) {
         if (track != null) {
+            _currentTrackId = track.trackId
             _trackDtoApp.postValue(track!!)
             audioPlayerInteractorImpl.setTrack(track.previewUrl)
         } else {

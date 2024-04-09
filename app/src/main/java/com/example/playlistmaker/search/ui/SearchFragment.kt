@@ -13,9 +13,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.example.playlistmaker.main.domain.models.TrackDtoApp
-import com.example.playlistmaker.audio_player.ui.AudioPlayerActivity
+import com.example.playlistmaker.audio_player.ui.AudioPlayerFragment
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.SearchViewState
 import kotlinx.coroutines.delay
@@ -138,8 +140,8 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
@@ -208,6 +210,8 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
     override fun onResume() {
         super.onResume()
 
+        isClickAllowed = true
+
         searchViewModel.getHistoryTrackList()
         if (binding.editTextSearch.text.isNotEmpty()) {
             searchViewModel.refreshTrackDatabaseStatus()
@@ -218,26 +222,20 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
     override fun onItemClick(track: TrackDtoApp) {
         if (clickDebounce()) {
             searchViewModel.writeOneTrack(track)
-            goToActivity(track)
+            goToAudioPlayerFragment(track)
         }
     }
 
     override fun onItemClickHistory(track: TrackDtoApp) {
         if (clickDebounce()) {
-            goToActivity(track)
+            goToAudioPlayerFragment(track)
         }
     }
 
-    private fun goToActivity(track: TrackDtoApp) {
-        val intent = Intent(
-            parentFragment?.activity,
-            AudioPlayerActivity::class.java
-        )
-
-        intent.putExtra(
-            App.trackKey, track
-        )
-        startActivity(intent)
+    private fun goToAudioPlayerFragment(track: TrackDtoApp) {
+        val bundle = Bundle()
+        bundle.putParcelable(App.trackKey, track)
+        findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment, bundle)
     }
 
     private fun clickDebounce(): Boolean {

@@ -6,11 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.example.playlistmaker.main.domain.models.TrackDtoApp
-import com.example.playlistmaker.audio_player.ui.AudioPlayerActivity
+import com.example.playlistmaker.audio_player.ui.AudioPlayerFragment
 import com.example.playlistmaker.databinding.FragmentSelectedTracksBinding
 import com.example.playlistmaker.mediateka.domain.models.SelectedTracksViewState
 import com.example.playlistmaker.search.ui.TrackListAdapter
@@ -18,18 +22,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
+class SelectedTracksFragment : Fragment(), SelectedTrackListAdapter.ItemClickInterface {
 
     private var _binding: FragmentSelectedTracksBinding? = null
     private val binding: FragmentSelectedTracksBinding get() = _binding!!
 
     private val selectedTracksViewModel by viewModel<SelectedTracksViewModel>()
 
-    private var selectedTrackListAdapter: TrackListAdapter? = null
+    private var selectedTrackListAdapter: SelectedTrackListAdapter? = null
 
     private var isClickAllowed = true
 
-    private val tag = "fragment"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,13 +46,13 @@ class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
         super.onViewCreated(view, savedInstanceState)
         Log.d(tag, "${requireArguments().getString(SELECTED_TRACKS_URL)}")
 
-
         prepareViews()
         observeValues()
     }
 
     private fun prepareViews() {
-        selectedTrackListAdapter = TrackListAdapter()
+        Log.d(tag,"prepareViews() SelectedTracksFragment")
+        selectedTrackListAdapter = SelectedTrackListAdapter()
         selectedTrackListAdapter?.setInItemClickListener(this)
         binding.recyclerViewTrackList.adapter = selectedTrackListAdapter
 
@@ -57,17 +60,17 @@ class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
 
     override fun onResume() {
         super.onResume()
-
+        isClickAllowed=true
         selectedTracksViewModel.getSelectedTracks()
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
     private fun observeValues() {
-
         selectedTracksViewModel.selectedTracksViewState.observe(viewLifecycleOwner) {
             when (it) {
                 is SelectedTracksViewState.ListSelectedTracksEmpty -> {
@@ -83,6 +86,7 @@ class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
                     binding.layoutRecyclerView.visibility = View.VISIBLE
                 }
 
+                else -> {}
             }
         }
 
@@ -91,20 +95,17 @@ class SelectedTracksFragment : Fragment(), TrackListAdapter.ItemClickInterface {
 
     override fun onItemClick(track: TrackDtoApp) {
         if (clickDebounce()) {
-            goToActivity(track)
+            goToAudioPlayerFragment(track)
         }
     }
 
-    private fun goToActivity(track: TrackDtoApp) {
-        val intent = Intent(
-            parentFragment?.activity,
-            AudioPlayerActivity::class.java
-        )
+    private fun goToAudioPlayerFragment(track: TrackDtoApp) {
+        val bundle = Bundle()
+        bundle.putParcelable(App.trackKey, track)
 
-        intent.putExtra(
-            App.trackKey,track
+        findNavController().navigate(
+            R.id.action_mediatekaFragment_to_audioPlayerFragment,bundle
         )
-        startActivity(intent)
     }
 
     private fun clickDebounce(): Boolean {
