@@ -1,9 +1,11 @@
 package com.example.playlistmaker.create_playlist.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,10 +13,12 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
@@ -27,14 +31,18 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.audio_player.ui.PlayListAudioPlayerAdapter
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.mediateka.ui.PlayListsAdapter
+import com.example.playlistmaker.mediateka.ui.SelectedTrackListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.lang.Exception
+import java.lang.reflect.Type
 
 
 class CreatePlaylistFragment : Fragment() {
@@ -48,6 +56,7 @@ class CreatePlaylistFragment : Fragment() {
     private var confirmDialog: MaterialAlertDialogBuilder? = null
     private var playListPictureUri: String = ""
     private var uri: String = ""
+    private var cornerRadius = 8F
 
 
     private val requestPermissionLauncher =
@@ -62,19 +71,24 @@ class CreatePlaylistFragment : Fragment() {
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
+                binding.imageViewPlaylistImage.clipToOutline = true
+                binding.imageViewPlaylistImage.setBackgroundResource(R.drawable.rectangle_no_color)
                 binding.imageViewPlaylistImage.setImageURI(uri)
+                binding.imageViewPlaylistImage.scaleType = ImageView.ScaleType.CENTER
+
                 isUserChooseImage = true
                 this.uri = uri.toString()
 
             } else {
                 Log.d(tag, "изображение не выбрано")
-
-                Glide.with(this)
-                    .load(R.drawable.placeholder)
-                    .centerCrop()
-                    .into(binding.imageViewPlaylistImage)
+                binding.imageViewPlaylistImage.clipToOutline = true
+                binding.imageViewPlaylistImage.setBackgroundResource(R.drawable.rectangle_no_color)
+                binding.imageViewPlaylistImage.setImageResource(R.drawable.placeholder)
+                binding.imageViewPlaylistImage.scaleType = ImageView.ScaleType.CENTER_CROP
             }
         }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -164,7 +178,7 @@ class CreatePlaylistFragment : Fragment() {
         binding.buttonCreatePlaylist.setOnClickListener {
             if (isButtonCreateAvailable) {
 
-                if (uri.isNotEmpty()){
+                if (uri.isNotEmpty()) {
                     saveImageToPrivateStorage(uri.toUri())
                 }
 
@@ -237,7 +251,13 @@ class CreatePlaylistFragment : Fragment() {
     private fun addBackPressedCallback() {
         activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                checkEmptyFields()
+                try {
+                    checkEmptyFields()
+                }catch (e:Exception){
+                    Log.d("track","catch ${e.message}")
+                    findNavController().navigateUp()
+                }
+
             }
         })
     }
@@ -252,7 +272,12 @@ class CreatePlaylistFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+       _binding = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
     }
 
     private fun checkPermission() {

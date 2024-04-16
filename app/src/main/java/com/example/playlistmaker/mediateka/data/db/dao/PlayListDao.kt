@@ -5,17 +5,17 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
+
 import com.example.playlistmaker.mediateka.data.db.PlayListEntity
-import com.example.playlistmaker.mediateka.data.db.TrackEntity
+
 
 @Dao
 interface PlayListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOnePlayList(playList: PlayListEntity)
+    fun addOnePlayList(playList: PlayListEntity)
 
     @Delete
-    fun deleteOnePlayList(track: TrackEntity)
+    fun deleteOnePlayList(playList: PlayListEntity)
 
     @Query("SELECT * FROM playlist_table")
     fun getPlayLists(): List<PlayListEntity>

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,8 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
-import com.example.playlistmaker.audio_player.ui.AudioPlayerFragment
+import com.example.playlistmaker.main.domain.models.TrackApp
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.SearchViewState
 import kotlinx.coroutines.delay
@@ -219,20 +217,20 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
 
     }
 
-    override fun onItemClick(track: TrackDtoApp) {
+    override fun onItemClick(track: TrackApp) {
         if (clickDebounce()) {
             searchViewModel.writeOneTrack(track)
             goToAudioPlayerFragment(track)
         }
     }
 
-    override fun onItemClickHistory(track: TrackDtoApp) {
+    override fun onItemClickHistory(track: TrackApp) {
         if (clickDebounce()) {
             goToAudioPlayerFragment(track)
         }
     }
 
-    private fun goToAudioPlayerFragment(track: TrackDtoApp) {
+    private fun goToAudioPlayerFragment(track: TrackApp) {
         val bundle = Bundle()
         bundle.putParcelable(App.trackKey, track)
         findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment, bundle)
@@ -253,8 +251,8 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
     companion object {
         private const val tag = "SearchActivity"
         private const val key: String = "key"
-        private val trackList = arrayListOf<TrackDtoApp>()
-        private val trackListHistory = arrayListOf<TrackDtoApp>()
+        private val trackList = arrayListOf<TrackApp>()
+        private val trackListHistory = arrayListOf<TrackApp>()
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 

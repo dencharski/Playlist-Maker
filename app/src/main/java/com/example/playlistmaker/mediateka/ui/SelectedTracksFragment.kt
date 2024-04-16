@@ -1,23 +1,18 @@
 package com.example.playlistmaker.mediateka.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
-import com.example.playlistmaker.audio_player.ui.AudioPlayerFragment
+import com.example.playlistmaker.main.domain.models.TrackApp
 import com.example.playlistmaker.databinding.FragmentSelectedTracksBinding
 import com.example.playlistmaker.mediateka.domain.models.SelectedTracksViewState
-import com.example.playlistmaker.search.ui.TrackListAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -80,7 +75,7 @@ class SelectedTracksFragment : Fragment(), SelectedTrackListAdapter.ItemClickInt
                 }
 
                 is SelectedTracksViewState.ListSelectedTracks -> {
-                    selectedTrackListAdapter?.setTrackList(it.list as ArrayList<TrackDtoApp>)
+                    selectedTrackListAdapter?.setTrackList(it.list as ArrayList<TrackApp>)
                     binding.imageViewEmptyResult.visibility = View.INVISIBLE
                     binding.textView.visibility = View.INVISIBLE
                     binding.layoutRecyclerView.visibility = View.VISIBLE
@@ -93,13 +88,13 @@ class SelectedTracksFragment : Fragment(), SelectedTrackListAdapter.ItemClickInt
     }
 
 
-    override fun onItemClick(track: TrackDtoApp) {
+    override fun onItemClick(track: TrackApp) {
         if (clickDebounce()) {
             goToAudioPlayerFragment(track)
         }
     }
 
-    private fun goToAudioPlayerFragment(track: TrackDtoApp) {
+    private fun goToAudioPlayerFragment(track: TrackApp) {
         val bundle = Bundle()
         bundle.putParcelable(App.trackKey, track)
 

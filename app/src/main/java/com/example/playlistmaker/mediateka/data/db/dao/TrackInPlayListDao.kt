@@ -5,20 +5,20 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.mediateka.data.db.TrackEntity
+import com.example.playlistmaker.mediateka.data.db.TrackInPlayListEntity
 
 @Dao
 interface TrackInPlayListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOneTrack(track: TrackEntity)
+    fun addOneTrackInPlayList(track: TrackInPlayListEntity)
 
     @Delete
-    fun deleteOneTrack(track: TrackEntity)
+    fun deleteOneTrackFromPlayList(track: TrackInPlayListEntity)
 
     @Query("SELECT trackId FROM track_in_playlist_table")
-    fun getTracksIds(): List<String>
+    fun getTracksIdsFromPlayList(): List<String>
 
     @Query("SELECT * FROM track_in_playlist_table")
-    fun getTracks(): List<TrackEntity>
+    fun getTracksFromPlayList(): List<TrackInPlayListEntity>
 }

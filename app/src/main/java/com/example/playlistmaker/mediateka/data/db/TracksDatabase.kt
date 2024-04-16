@@ -7,7 +7,7 @@ import com.example.playlistmaker.mediateka.data.db.dao.TrackDao
 import com.example.playlistmaker.mediateka.data.db.dao.TrackInPlayListDao
 
 @Database(
-    version = 2,
+    version = 1,
     entities = [TrackEntity::class, PlayListEntity::class, TrackInPlayListEntity::class]
 )
 abstract class TracksDatabase : RoomDatabase() {

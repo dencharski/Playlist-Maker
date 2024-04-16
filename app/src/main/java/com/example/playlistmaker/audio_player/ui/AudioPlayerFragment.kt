@@ -1,6 +1,5 @@
 package com.example.playlistmaker.audio_player.ui
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,27 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackApp
 import com.example.playlistmaker.audio_player.domain.models.AudioPlayerViewState
 import com.example.playlistmaker.create_playlist.domain.models.PlayList
 import com.example.playlistmaker.databinding.FragmentAudioplayerBinding
-import com.example.playlistmaker.databinding.FragmentMediatekaBinding
-import com.example.playlistmaker.mediateka.ui.SelectedTracksFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.ArrayList
 
 
-class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInterface {
+class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickPlayListInterface {
 
     private var _binding: FragmentAudioplayerBinding? = null
     private val binding: FragmentAudioplayerBinding get() = _binding!!
@@ -57,14 +50,12 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val track: TrackDtoApp? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(App.trackKey, TrackDtoApp::class.java)
+        val track: TrackApp? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(App.trackKey, TrackApp::class.java)
         } else {
             arguments?.getParcelable(App.trackKey)
         }
         audioPlayerViewModel.setDataExtrasTrack(track)
-
-
 
         playListAudioPlayerAdapter = PlayListAudioPlayerAdapter()
         playListAudioPlayerAdapter?.setInItemClickListener(this)
@@ -87,10 +78,12 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
         }
 
         binding.imageButtonLikeItCheck.setOnClickListener {
+
             audioPlayerViewModel.onFavoriteClicked()
         }
 
         binding.imageButtonLikeItNotCheck.setOnClickListener {
+
             audioPlayerViewModel.onFavoriteClicked()
         }
 
@@ -99,6 +92,7 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
         }
 
         binding.imageButtonAddLibrary.setOnClickListener {
+
             audioPlayerViewModel.getListOfPlayLists()
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
@@ -130,13 +124,14 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
 
     private fun observeValues() {
 
-        audioPlayerViewModel.trackDtoApp.observe(viewLifecycleOwner) {
-            setViews(it)
-            binding.imageButtonPlayTrack.isEnabled = true
-            binding.imageButtonPlayTrack.visibility = View.VISIBLE
-            binding.imageButtonPauseTrack.visibility = View.INVISIBLE
-            binding.textViewTrackTimeNowPlay.text = ZERO_VAL
-
+        audioPlayerViewModel.trackApp.observe(viewLifecycleOwner) {
+            if (it != null) {
+                setViews(it)
+                binding.imageButtonPlayTrack.isEnabled = true
+                binding.imageButtonPlayTrack.visibility = View.VISIBLE
+                binding.imageButtonPauseTrack.visibility = View.INVISIBLE
+                binding.textViewTrackTimeNowPlay.text = ZERO_VAL
+            }
         }
 
         audioPlayerViewModel.audioPlayerViewState.observe(viewLifecycleOwner) {
@@ -211,9 +206,9 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
         }
     }
 
-    private fun getCoverArtwork(track: TrackDtoApp) = track.artworkUrl512
+    private fun getCoverArtwork(track: TrackApp) = track.artworkUrl512
 
-    private fun setViews(track: TrackDtoApp) {
+    private fun setViews(track: TrackApp) {
 
         binding.imageViewArtworkUrl.let {
             Glide.with(this)
@@ -226,9 +221,9 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
 
         binding.textViewTrackName.text = track.trackName
         binding.textViewArtistName.text = track.artistName
-        binding.textViewTrackTime.text = track.trackTimeMillis
+        binding.textViewTrackTime.text = track.getTrackTime()
         binding.textViewCollectionName.text = track.collectionName
-        binding.textViewReleaseDate.text = track.releaseDate
+        binding.textViewReleaseDate.text = track.getDateRelease()
         binding.textViewPrimaryGenreName.text = track.primaryGenreName
         binding.textViewCountry.text = track.country
 
@@ -273,7 +268,6 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickInte
     }
 
     override fun onItemClick(playList: PlayList) {
-        Log.d(tag, "playlist ${playList.playListName}")
 
         audioPlayerViewModel.checkTrackInPlaylist(playList)
 

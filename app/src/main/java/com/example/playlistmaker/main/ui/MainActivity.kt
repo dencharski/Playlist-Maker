@@ -2,6 +2,7 @@ package com.example.playlistmaker.main.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -20,10 +21,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        Log.d("track", "start App()")
         mainViewModel.setTheme()
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -34,9 +36,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.createPlaylistFragment -> {
                     bottomNavigationView.visibility = View.GONE
                 }
-                R.id.audioPlayerFragment->{
+
+                R.id.audioPlayerFragment -> {
                     bottomNavigationView.visibility = View.GONE
                 }
+
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }

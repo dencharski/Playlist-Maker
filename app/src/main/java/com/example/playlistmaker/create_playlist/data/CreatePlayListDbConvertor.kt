@@ -5,37 +5,29 @@ import com.example.playlistmaker.mediateka.data.db.PlayListEntity
 import com.google.gson.Gson
 
 class CreatePlayListDbConvertor {
-    fun map(playList: PlayList): PlayListEntity {
+    fun mapCreatePlayList(playList: PlayList): PlayListEntity {
         return PlayListEntity(
             null,
             playListName = playList.playListName,
             playlistDescription = playList.playlistDescription,
             playlistImageUri = playList.playlistImageUri,
-            listOfTrackIds = listOfTracksInString(playList.listOfTrackIds),
-            sizeOfTrackIdsList = playList.sizeOfTrackIdsList.toString()
+            listOfTrackIds = listOfLongInString(playList.listOfTrackIds),
+            sizeOfTrackIdsList = playList.listOfTrackIds.size.toString()
         )
     }
 
-    fun mapInsertChangePlayList(playList: PlayList, trackId: Long): PlayListEntity {
-        val list = addTrackIdInList(playList, trackId)
+    fun mapChangePlayList(playList: PlayList): PlayListEntity {
+
         return PlayListEntity(
-            playListId = list.playListId.toLong(),
-            playListName = list.playListName,
-            playlistDescription = list.playlistDescription,
-            playlistImageUri = list.playlistImageUri,
-            listOfTrackIds = listOfTracksInString(list.listOfTrackIds),
-            sizeOfTrackIdsList = list.sizeOfTrackIdsList.toString()
+            playListId = playList.playListId.toLong(),
+            playListName = playList.playListName,
+            playlistDescription = playList.playlistDescription,
+            playlistImageUri = playList.playlistImageUri,
+            listOfTrackIds = listOfLongInString(playList.listOfTrackIds),
+            sizeOfTrackIdsList = playList.listOfTrackIds.size.toString()
         )
     }
 
-    private fun addTrackIdInList(
-        playList: PlayList,
-        trackId: Long
-    ): PlayList {
-        playList.listOfTrackIds.add(trackId)
-        playList.sizeOfTrackIdsList = playList.listOfTrackIds.size
-        return playList
-    }
 
     fun map(playList: PlayListEntity): PlayList {
         return PlayList(
@@ -43,16 +35,18 @@ class CreatePlayListDbConvertor {
             playListName = playList.playListName,
             playlistDescription = playList.playlistDescription,
             playlistImageUri = playList.playlistImageUri,
-            listOfTrackIds = stringInListOfLong(playList.listOfTrackIds).toMutableList(),
+            listOfTrackIds = stringInArrayOfLong(playList.listOfTrackIds).toMutableList(),
             sizeOfTrackIdsList = playList.sizeOfTrackIdsList.toInt()
         )
     }
 
-    private fun listOfTracksInString(list: List<Long>): String {
+    fun getListOfTrackIds(playList: PlayList)=playList.listOfTrackIds.toList()
+
+     fun listOfLongInString(list: List<Long>): String {
         return Gson().toJson(list)
     }
 
-    private fun stringInListOfLong(string: String): Array<Long> {
+      fun stringInArrayOfLong(string: String): Array<Long> {
         return Gson().fromJson(string, Array<Long>::class.java)
     }
 

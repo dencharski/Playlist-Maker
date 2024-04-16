@@ -18,7 +18,7 @@ import com.example.playlistmaker.databinding.PlaylistItemHorizontalBinding
 class PlayListAudioPlayerAdapter :
     RecyclerView.Adapter<PlayListAudioPlayerAdapter.PlayListViewHolder>() {
     private var listOfPlayLists = arrayListOf<PlayList>()
-    private var itemClickListener: ItemClickInterface? = null
+    private var itemClickListener: ItemClickPlayListInterface? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder {
 
@@ -43,17 +43,17 @@ class PlayListAudioPlayerAdapter :
     }
 
 
-    interface ItemClickInterface {
+    interface ItemClickPlayListInterface {
         fun onItemClick(playList: PlayList)
     }
 
-    fun setInItemClickListener(itemClickListener: ItemClickInterface) {
+    fun setInItemClickListener(itemClickListener: ItemClickPlayListInterface) {
         this.itemClickListener = itemClickListener
     }
 
     class PlayListViewHolder(
         binding: PlaylistItemHorizontalBinding,
-        private val itemClickListener: ItemClickInterface?
+        private val itemClickListener: ItemClickPlayListInterface?
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val playListName: TextView = binding.textViewPlaylistName

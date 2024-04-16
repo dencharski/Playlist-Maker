@@ -1,14 +1,12 @@
 package com.example.playlistmaker.main.domain.models
 
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.Parceler
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Parcelize
-data class TrackDtoApp(
+data class TrackApp(
     val trackId: Long,
     val trackName: String = "",
     val artistName: String = "",
@@ -34,6 +32,10 @@ data class TrackDtoApp(
         } catch (e: Exception) {
             return trackTimeMillis
         }
+    }
+
+    fun getDateRelease():String{
+            return releaseDate.take(4)
     }
 }
 
