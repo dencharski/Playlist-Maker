@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.models.SearchViewState
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchInteractor
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackApp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,9 +21,9 @@ class SearchViewModel(
     private val _searchViewModelState = MutableLiveData<SearchViewState>()
     val searchViewModelState: LiveData<SearchViewState> get() = _searchViewModelState
     private var searchJob: Job? = null
-    private var searchTrackResultList = arrayListOf<TrackDtoApp>()
+    private var searchTrackResultList = arrayListOf<TrackApp>()
 
-    fun writeOneTrack(track: TrackDtoApp) {
+    fun writeOneTrack(track: TrackApp) {
         searchHistoryInteractor.writeOneTrack(track)
         getHistoryTrackList()
     }
@@ -35,7 +34,7 @@ class SearchViewModel(
             searchHistoryInteractor.getTrackList().collect {
                 _searchViewModelState.postValue(
                     SearchViewState.SearchViewStateDataHistory(
-                        trackListHistory = it as ArrayList<TrackDtoApp>
+                        trackListHistory = it as ArrayList<TrackApp>
                     )
                 )
             }

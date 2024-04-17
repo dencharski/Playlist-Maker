@@ -1,10 +1,10 @@
 package com.example.playlistmaker.search.domain.api
 
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackApp
 import kotlinx.coroutines.flow.Flow
 
 interface SearchHistoryInteractor {
-    fun writeOneTrack(track: TrackDtoApp)
-    fun getTrackList(): Flow<List<TrackDtoApp>>
+    fun writeOneTrack(track: TrackApp)
+    fun getTrackList(): Flow<List<TrackApp>>
     fun removeTrackListInSharedPreferences()
 }

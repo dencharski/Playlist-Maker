@@ -1,32 +1,28 @@
 package com.example.playlistmaker.search.domain.impl
 
-import android.util.Log
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackApp
 import com.example.playlistmaker.search.data.TrackHistoryConvertor
 import com.example.playlistmaker.search.data.dto.TrackHistoryDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SearchHistoryInteractorImpl(
-    private val searchHistoryRepository: SearchHistoryRepository,
-    private val trackHistoryConvertor: TrackHistoryConvertor
+    private val searchHistoryRepository: SearchHistoryRepository
 ) :
     SearchHistoryInteractor {
-    override fun writeOneTrack(track: TrackDtoApp) {
-        searchHistoryRepository.writeOneTrack(trackHistoryConvertor.map(track))
+    override fun writeOneTrack(track: TrackApp) {
+        searchHistoryRepository.writeOneTrack(track)
     }
 
-    override fun getTrackList(): Flow<List<TrackDtoApp>> {
-        return searchHistoryRepository.getTrackList().map { track-> convertFromTrackHistory(track) }
+    override fun getTrackList(): Flow<List<TrackApp>> {
+        return searchHistoryRepository.getTrackList()
     }
 
     override fun removeTrackListInSharedPreferences() {
         searchHistoryRepository.removeTrackListInSharedPreferences()
     }
 
-    private fun convertFromTrackHistory(tracks:List<TrackHistoryDto>):List<TrackDtoApp> {
-         return tracks.map { track -> trackHistoryConvertor.map(track) }
-    }
+
 }

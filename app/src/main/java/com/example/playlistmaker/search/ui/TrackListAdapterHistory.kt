@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.main.domain.models.TrackDtoApp
+import com.example.playlistmaker.main.domain.models.TrackApp
 import com.example.playlistmaker.databinding.TrackItemBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackListAdapterHistory :
     RecyclerView.Adapter<TrackListAdapterHistory.TrackViewHolder>() {
-    private var trackList = arrayListOf<TrackDtoApp>()
+    private var trackList = arrayListOf<TrackApp>()
     private var itemClickListener: ItemClickInterfaceHistory? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(
@@ -34,13 +34,13 @@ class TrackListAdapterHistory :
         holder.bind(trackList[position])
     }
 
-    fun setTrackList(trackList: ArrayList<TrackDtoApp>) {
+    fun setTrackList(trackList: ArrayList<TrackApp>) {
         this.trackList = trackList
         notifyDataSetChanged()
     }
 
     interface ItemClickInterfaceHistory {
-        fun onItemClickHistory(track: TrackDtoApp)
+        fun onItemClickHistory(track: TrackApp)
     }
 
     fun setInItemClickListener(itemClickListener: ItemClickInterfaceHistory) {
@@ -55,11 +55,11 @@ class TrackListAdapterHistory :
         private val artistName: TextView = binding.textViewArtistName
         private val trackTime: TextView = binding.textViewTrackTime
         private val artworkImageView: ImageView = binding.imageViewArtwork
-        private var itemTrackDtoApp: TrackDtoApp? = null
+        private var itemTrackApp: TrackApp? = null
 
         init {
             itemView.setOnClickListener {
-                itemTrackDtoApp?.let { it1 ->
+                itemTrackApp?.let { it1 ->
                     itemClickListener?.onItemClickHistory(
                         it1
                     )
@@ -67,8 +67,8 @@ class TrackListAdapterHistory :
             }
         }
 
-        fun bind(track: TrackDtoApp) {
-            itemTrackDtoApp = track
+        fun bind(track: TrackApp) {
+            itemTrackApp = track
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text = SimpleDateFormat(

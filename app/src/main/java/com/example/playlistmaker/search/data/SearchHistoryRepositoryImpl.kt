@@ -2,10 +2,10 @@ package com.example.playlistmaker.search.data
 
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.playlistmaker.main.domain.models.TrackApp
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.mediateka.data.db.TracksDatabase
 import com.example.playlistmaker.search.data.dto.TrackHistoryDto
-import com.example.playlistmaker.search.domain.models.ResponseModel
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,8 @@ import kotlinx.coroutines.withContext
 
 class SearchHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
-    private val tracksDatabase: TracksDatabase
+    private val tracksDatabase: TracksDatabase,
+    private val trackHistoryConvertor: TrackHistoryConvertor
 ) :
     SearchHistoryRepository {
 
@@ -26,8 +27,10 @@ class SearchHistoryRepositoryImpl(
         addListId()
     }
 
-    override fun writeOneTrack(track: TrackHistoryDto) {
+    override fun writeOneTrack(trackApp: TrackApp) {
         val arrayListOfTrackDtoApp = arrayListOf<TrackHistoryDto>()
+        val track=trackHistoryConvertor.map(trackApp)
+
         if (trackListId.contains(track.trackId)) {
             arrayListOfTrackDtoApp.add(track)
             trackList.forEach {
@@ -53,13 +56,13 @@ class SearchHistoryRepositoryImpl(
     }
 
 
-    override fun getTrackList(): Flow<List<TrackHistoryDto>> = flow {
+    override fun getTrackList(): Flow<List<TrackApp>> = flow {
         emit(withContext(Dispatchers.IO) {
             val listId = tracksDatabase.trackDao().getTracksIds()
             trackList.clear()
             trackList.addAll(read())
             trackList.forEach { it.isFavorite = false }
-            map(trackList, listId)
+            map(convertFromTrackHistory(trackList as List<TrackHistoryDto>), listId)
 
         })
     }
@@ -75,9 +78,9 @@ class SearchHistoryRepositoryImpl(
 
 
     private fun map(
-        arrayList: ArrayList<TrackHistoryDto>,
+        arrayList: List<TrackApp>,
         listId: List<String>
-    ): List<TrackHistoryDto> {
+    ): List<TrackApp> {
 
         arrayList.forEach { result ->
             listId.forEach { id ->
@@ -108,6 +111,10 @@ class SearchHistoryRepositoryImpl(
     private fun read(): Array<TrackHistoryDto> {
         val json = sharedPreferences.getString(USER_LIST_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<TrackHistoryDto>::class.java)
+    }
+
+    private fun convertFromTrackHistory(tracks:List<TrackHistoryDto>):List<TrackApp> {
+        return tracks.map { track -> trackHistoryConvertor.map(track) }
     }
 
     companion object {
