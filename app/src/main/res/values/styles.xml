@@ -200,4 +200,13 @@
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
+    <style name="CurrentPlayListFragmentStyle">
+        <item name="android:background">@color/search_layout_color</item>
+    </style>
+
+    <style name="CurrentPlayListBottomSheetMenuTextViewStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textColor">@color/button_textColor</item>
+    </style>
 </resources>

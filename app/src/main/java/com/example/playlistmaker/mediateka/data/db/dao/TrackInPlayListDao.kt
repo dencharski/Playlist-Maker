@@ -13,12 +13,12 @@ interface TrackInPlayListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addOneTrackInPlayList(track: TrackInPlayListEntity)
 
-    @Delete
-    fun deleteOneTrackFromPlayList(track: TrackInPlayListEntity)
+    @Query("DELETE from track_in_playlist_table WHERE trackId IN (:trackId)")
+    fun deleteOneTrackFromPlayList(trackId: Long)
 
     @Query("SELECT trackId FROM track_in_playlist_table")
     fun getTracksIdsFromPlayList(): List<String>
 
-    @Query("SELECT * FROM track_in_playlist_table")
-    fun getTracksFromPlayList(): List<TrackInPlayListEntity>
+    @Query("SELECT * FROM track_in_playlist_table WHERE trackId IN (:listOfTrackId)")
+    fun getTracksFromPlayList(listOfTrackId: List<String>): List<TrackInPlayListEntity>
 }

@@ -17,4 +17,10 @@ class CreatePlayListRepositoryImpl(
         }
 
     }
+
+    override suspend fun editPlaylist(playList: PlayList) {
+        withContext(Dispatchers.IO) {
+            tracksDatabase.playListDao().addOnePlayList(playList = createPlayListDbConvertor.mapConvertPlayList(playList))
+        }
+    }
 }
