@@ -48,10 +48,11 @@ class SearchViewModel(
     }
 
     private fun searchTrack() {
-        _searchViewModelState.postValue(SearchViewState.Loading)
+
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
+            _searchViewModelState.postValue(SearchViewState.Loading)
             searchInteractor.searchTrack(textTrack)
                 .collect { response ->
                     if (response != null) {

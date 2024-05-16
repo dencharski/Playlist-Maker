@@ -67,9 +67,6 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
             binding.layoutSearchHistory.visibility = View.GONE
         }
 
-        savedInstanceState?.let {
-            binding.editTextSearch.setText(it.getString(key))
-        }
 
         binding.imageViewClear.setOnClickListener {
             binding.editTextSearch.setText("")
@@ -200,10 +197,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickInterface,
         binding.frameLayoutProgressbar.visibility = View.GONE
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(key, binding.editTextSearch.text.toString())
-    }
+
 
     override fun onResume() {
         super.onResume()

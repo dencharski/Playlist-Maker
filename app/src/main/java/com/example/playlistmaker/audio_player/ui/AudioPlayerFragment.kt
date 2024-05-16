@@ -93,7 +93,6 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickPlay
 
         binding.imageButtonAddLibrary.setOnClickListener {
 
-            audioPlayerViewModel.getListOfPlayLists()
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
@@ -120,6 +119,11 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickPlay
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        audioPlayerViewModel.getListOfPlayLists()
     }
 
     private fun observeValues() {
