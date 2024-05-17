@@ -159,5 +159,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.95" />
 
+    <TextView
+        android:id="@+id/button_edit_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_margin"
+        android:background="@drawable/rectangle_button"
+        android:fontFamily="@font/ys_display_medium"
+        android:gravity="center"
+        android:padding="@dimen/base_margin"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        android:textSize="@dimen/settings_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

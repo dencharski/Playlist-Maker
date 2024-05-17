@@ -16,10 +16,10 @@ class CreatePlayListDbConvertor {
         )
     }
 
-    fun mapChangePlayList(playList: PlayList): PlayListEntity {
+    fun mapConvertPlayList(playList: PlayList): PlayListEntity {
 
         return PlayListEntity(
-            playListId = playList.playListId.toLong(),
+            playListId = playList.playListId?.toLong(),
             playListName = playList.playListName,
             playlistDescription = playList.playlistDescription,
             playlistImageUri = playList.playlistImageUri,
@@ -31,7 +31,7 @@ class CreatePlayListDbConvertor {
 
     fun map(playList: PlayListEntity): PlayList {
         return PlayList(
-            playListId = playList.playListId.toString(),
+            playListId = playList.playListId,
             playListName = playList.playListName,
             playlistDescription = playList.playlistDescription,
             playlistImageUri = playList.playlistImageUri,

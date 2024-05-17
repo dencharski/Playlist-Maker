@@ -51,9 +51,9 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickPlay
         super.onViewCreated(view, savedInstanceState)
 
         val track: TrackApp? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(App.trackKey, TrackApp::class.java)
+            arguments?.getParcelable(App.TRACK_KEY, TrackApp::class.java)
         } else {
-            arguments?.getParcelable(App.trackKey)
+            arguments?.getParcelable(App.TRACK_KEY)
         }
         audioPlayerViewModel.setDataExtrasTrack(track)
 
@@ -93,12 +93,11 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickPlay
 
         binding.imageButtonAddLibrary.setOnClickListener {
 
-            audioPlayerViewModel.getListOfPlayLists()
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         binding.buttonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_audioPlayerFragment_to_createPlaylistFragment)
+            findNavController().navigate(R.id.action_audioPlayerFragment_to_createPlaylistFragment,null)
         }
 
         bottomSheetBehavior?.addBottomSheetCallback(object :
@@ -120,6 +119,11 @@ class AudioPlayerFragment : Fragment(), PlayListAudioPlayerAdapter.ItemClickPlay
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        audioPlayerViewModel.getListOfPlayLists()
     }
 
     private fun observeValues() {

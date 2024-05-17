@@ -24,17 +24,18 @@ import com.example.playlistmaker.main.domain.MainInteractorImpl
 import com.example.playlistmaker.main.domain.api.MainInteractor
 import com.example.playlistmaker.main.domain.api.MainRepository
 import com.example.playlistmaker.main.ui.MainViewModel
-import com.example.playlistmaker.audio_player.data.AudioPlayerAddTrackInPlayListRepositoryImpl
+import com.example.playlistmaker.audio_player.data.AudioPlayerAllTrackInPlayListRepositoryImpl
 import com.example.playlistmaker.audio_player.data.AudioPlayerPlayListRepositoryImpl
 import com.example.playlistmaker.mediateka.data.SelectedTracksRepositoryImpl
 import com.example.playlistmaker.mediateka.data.TrackDbConvertor
 import com.example.playlistmaker.mediateka.data.db.TracksDatabase
-import com.example.playlistmaker.audio_player.domain.api.AudioPlayerAddTrackInPlayListRepository
+import com.example.playlistmaker.audio_player.domain.api.AudioPlayerAllTrackInPlayListRepository
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerPlayListInteractor
 import com.example.playlistmaker.audio_player.domain.api.AudioPlayerPlayListRepository
 import com.example.playlistmaker.mediateka.domain.api.SelectedTrackInteractor
 import com.example.playlistmaker.mediateka.domain.api.SelectedTracksRepository
 import com.example.playlistmaker.audio_player.domain.impl.AudioPlayerPlayListInteractorImpl
+import com.example.playlistmaker.current_playlist.ui.CurrentPlayListViewModel
 import com.example.playlistmaker.mediateka.domain.impl.SelectedTrackInteractorImpl
 import com.example.playlistmaker.mediateka.ui.MediatekaViewModel
 import com.example.playlistmaker.mediateka.ui.PlayListsViewModel
@@ -116,7 +117,7 @@ object DependencyModule {
         }
         single<CreatePlayListRepository> { CreatePlayListRepositoryImpl(get(), get()) }
         single<AudioPlayerPlayListRepository> { AudioPlayerPlayListRepositoryImpl(get(), get()) }
-        single<AudioPlayerAddTrackInPlayListRepository> { AudioPlayerAddTrackInPlayListRepositoryImpl(get(), get()) }
+        single<AudioPlayerAllTrackInPlayListRepository> { AudioPlayerAllTrackInPlayListRepositoryImpl(get(), get()) }
     }
     val interactorModule = module {
         single<AudioPlayerInteractor> { AudioPlayerInteractorImpl(get()) }
@@ -141,5 +142,6 @@ object DependencyModule {
         viewModel { SelectedTracksViewModel(get()) }
         viewModel { PlayListsViewModel(get()) }
         viewModel { CreatePlaylistViewModel(get()) }
+        viewModel { CurrentPlayListViewModel(get()) }
     }
 }

@@ -96,7 +96,7 @@ class SelectedTracksFragment : Fragment(), SelectedTrackListAdapter.ItemClickInt
 
     private fun goToAudioPlayerFragment(track: TrackApp) {
         val bundle = Bundle()
-        bundle.putParcelable(App.trackKey, track)
+        bundle.putParcelable(App.TRACK_KEY, track)
 
         findNavController().navigate(
             R.id.action_mediatekaFragment_to_audioPlayerFragment,bundle

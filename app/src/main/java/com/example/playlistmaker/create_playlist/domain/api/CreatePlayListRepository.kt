@@ -5,4 +5,5 @@ import com.example.playlistmaker.mediateka.data.db.PlayListEntity
 
 interface CreatePlayListRepository {
     suspend fun createPlaylist(playList: PlayList)
+    suspend fun editPlaylist(playList: PlayList)
 }

@@ -41,6 +41,10 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.visibility = View.GONE
                 }
 
+                R.id.currentPlayListFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                }
+
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }

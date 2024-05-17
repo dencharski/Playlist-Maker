@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.create_playlist.domain.models.PlayList
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
@@ -37,7 +37,7 @@ class PlaylistsFragment : Fragment(), PlayListsAdapter.ItemClickInterface {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_mediatekaFragment_to_createPlaylistFragment)
+            findNavController().navigate(R.id.action_mediatekaFragment_to_createPlaylistFragment,null)
         }
 
         playListsAdapter = PlayListsAdapter()
@@ -86,7 +86,10 @@ class PlaylistsFragment : Fragment(), PlayListsAdapter.ItemClickInterface {
     }
 
     override fun onItemClick(playList: PlayList) {
-        Log.d(tag, "playlistClick ")
+        Log.d(tag, "PlayListsFragment playlistId =  ${playList.playListId}")
+        val bundle = Bundle()
+        playList.playListId?.let { bundle.putLong(App.PLAYLIST_ID, it) }
+        findNavController().navigate(R.id.action_mediatekaFragment_to_currentPlayListFragment,bundle)
     }
     private fun setViewIsEmpty(){
         binding.layoutRecyclerView.visibility=View.GONE

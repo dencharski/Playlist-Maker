@@ -11,4 +11,8 @@ class CreatePlayListInteractorImpl(
             createPlayListRepository.createPlaylist(playList)
 
     }
+
+    override suspend fun editPlaylist(playList: PlayList) {
+        createPlayListRepository.editPlaylist(playList)
+    }
 }

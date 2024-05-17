@@ -324,7 +324,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="4dp"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="500dp"
+        app:behavior_peekHeight="300dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -361,6 +361,7 @@
             android:id="@+id/recycler_view_playlists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="top"
             android:layout_marginTop="@dimen/margin_settings_menu_start"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

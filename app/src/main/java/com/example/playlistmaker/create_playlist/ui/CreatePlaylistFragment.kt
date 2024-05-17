@@ -1,11 +1,9 @@
 package com.example.playlistmaker.create_playlist.ui
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,11 +11,9 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -26,37 +22,42 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.audio_player.ui.PlayListAudioPlayerAdapter
+import com.example.playlistmaker.audio_player.ui.AudioPlayerFragment
+import com.example.playlistmaker.create_playlist.domain.models.CreatePlayListViewState
+import com.example.playlistmaker.create_playlist.domain.models.PlayList
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
-import com.example.playlistmaker.mediateka.ui.PlayListsAdapter
-import com.example.playlistmaker.mediateka.ui.SelectedTrackListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.InputStream
+import java.io.IOException
 import java.lang.Exception
-import java.lang.reflect.Type
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class CreatePlaylistFragment : Fragment() {
 
     private var _binding: FragmentCreatePlaylistBinding? = null
     private val binding: FragmentCreatePlaylistBinding get() = _binding!!
-    private val createPlaylistViewModel: CreatePlaylistViewModel by viewModel()
-    private val tag: String = "create"
+    private val createPlayListViewModel: CreatePlaylistViewModel by viewModel()
+    private val tag: String = "fragment"
     private var isButtonCreateAvailable: Boolean = false
     private var isUserChooseImage: Boolean = false
+    private var isUserEditPlayList: Boolean = false
     private var confirmDialog: MaterialAlertDialogBuilder? = null
     private var playListPictureUri: String = ""
     private var uri: String = ""
     private var cornerRadius = 8F
+    private var playList: PlayList? = null
 
 
     private val requestPermissionLauncher =
@@ -70,24 +71,29 @@ class CreatePlaylistFragment : Fragment() {
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                binding.imageViewPlaylistImage.clipToOutline = true
-                binding.imageViewPlaylistImage.setBackgroundResource(R.drawable.rectangle_no_color)
-                binding.imageViewPlaylistImage.setImageURI(uri)
-                binding.imageViewPlaylistImage.scaleType = ImageView.ScaleType.CENTER
-
-                isUserChooseImage = true
-                this.uri = uri.toString()
-
-            } else {
-                Log.d(tag, "изображение не выбрано")
-                binding.imageViewPlaylistImage.clipToOutline = true
-                binding.imageViewPlaylistImage.setBackgroundResource(R.drawable.rectangle_no_color)
-                binding.imageViewPlaylistImage.setImageResource(R.drawable.placeholder)
-                binding.imageViewPlaylistImage.scaleType = ImageView.ScaleType.CENTER_CROP
-            }
+            setPlayListImage(uri)
         }
 
+    private fun setPlayListImage(uri: Uri?) {
+        if (uri != null && uri.toString() != "") {
+
+            binding.imageViewPlaylistImage.clipToOutline = true
+            binding.imageViewPlaylistImage.setBackgroundResource(R.drawable.rectangle_no_color)
+            binding.imageViewPlaylistImage.setImageURI(uri)
+            binding.imageViewPlaylistImage.scaleType = ImageView.ScaleType.CENTER
+
+            isUserChooseImage = true
+            this.uri = uri.toString()
+
+        } else {
+            Log.d(tag, "изображение не выбрано")
+            binding.imageViewPlaylistImage.clipToOutline = true
+            binding.imageViewPlaylistImage.setBackgroundResource(R.drawable.rectangle_no_color)
+            binding.imageViewPlaylistImage.setImageResource(R.drawable.placeholder)
+            binding.imageViewPlaylistImage.scaleType = ImageView.ScaleType.CENTER_CROP
+            this.uri = ""
+        }
+    }
 
 
     override fun onCreateView(
@@ -100,6 +106,18 @@ class CreatePlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        playList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(App.PLAYLIST, PlayList::class.java)
+        } else {
+            arguments?.getParcelable(App.PLAYLIST)
+        }
+
+        if (playList != null) {
+            isUserEditPlayList = true
+            createPlayListViewModel.setPlayList(playList!!)
+
+        }
 
         binding.imageViewBackArrow.setOnClickListener {
             checkEmptyFields()
@@ -119,11 +137,15 @@ class CreatePlaylistFragment : Fragment() {
                     binding.textViewHintName.visibility = View.GONE
                     binding.editTextPlaylistName.setBackgroundResource(R.drawable.rectangle)
                     binding.buttonCreatePlaylist.setBackgroundResource(R.drawable.rectangle_button)
+                    binding.buttonEditPlaylist.setBackgroundResource(R.drawable.rectangle_button)
+
                     isButtonCreateAvailable = false
                 } else {
                     binding.textViewHintName.visibility = View.VISIBLE
                     binding.editTextPlaylistName.setBackgroundResource(R.drawable.rectangle_blue)
                     binding.buttonCreatePlaylist.setBackgroundResource(R.drawable.rectangle_button_blue)
+                    binding.buttonEditPlaylist.setBackgroundResource(R.drawable.rectangle_button_blue)
+
                     isButtonCreateAvailable = true
                 }
             }
@@ -137,9 +159,13 @@ class CreatePlaylistFragment : Fragment() {
                 binding.editTextPlaylistName.setBackgroundResource(R.drawable.rectangle_blue)
                 if (binding.editTextPlaylistName.text.isNullOrEmpty()) {
                     binding.buttonCreatePlaylist.setBackgroundResource(R.drawable.rectangle_button)
+                    binding.buttonEditPlaylist.setBackgroundResource(R.drawable.rectangle_button)
+
                     isButtonCreateAvailable = false
                 } else {
                     binding.buttonCreatePlaylist.setBackgroundResource(R.drawable.rectangle_button_blue)
+                    binding.buttonEditPlaylist.setBackgroundResource(R.drawable.rectangle_button_blue)
+
                     isButtonCreateAvailable = true
                 }
             } else {
@@ -147,11 +173,15 @@ class CreatePlaylistFragment : Fragment() {
                     binding.textViewHintName.visibility = View.GONE
                     binding.editTextPlaylistName.setBackgroundResource(R.drawable.rectangle)
                     binding.buttonCreatePlaylist.setBackgroundResource(R.drawable.rectangle_button)
+                    binding.buttonEditPlaylist.setBackgroundResource(R.drawable.rectangle_button)
+
                     isButtonCreateAvailable = false
                 } else {
                     binding.textViewHintName.visibility = View.VISIBLE
                     binding.editTextPlaylistName.setBackgroundResource(R.drawable.rectangle_blue)
                     binding.buttonCreatePlaylist.setBackgroundResource(R.drawable.rectangle_button_blue)
+                    binding.buttonEditPlaylist.setBackgroundResource(R.drawable.rectangle_button_blue)
+
                     isButtonCreateAvailable = true
                 }
 
@@ -182,19 +212,41 @@ class CreatePlaylistFragment : Fragment() {
                     saveImageToPrivateStorage(uri.toUri())
                 }
 
-
                 Toast.makeText(
                     context,
                     getString(R.string.playlist_was_created, binding.editTextPlaylistName.text),
                     Toast.LENGTH_SHORT
                 ).show()
 
-                createPlaylistViewModel.createPlaylist(
+                createPlayListViewModel.createPlaylist(
                     name = binding.editTextPlaylistName.text.toString(),
                     description = binding.editTextPlaylistDescription.text.toString(),
                     imageUri = playListPictureUri
                 )
 
+                findNavController().navigateUp()
+            }
+        }
+
+        binding.buttonEditPlaylist.setOnClickListener {
+            if (isButtonCreateAvailable) {
+
+                if (uri.isNotEmpty()) {
+                    Log.d(tag, "edit playlistImageUri= $uri")
+                    saveImageToPrivateStorage(uri.toUri())
+                } else {
+                    Log.d(tag, "edit playlistImageUri is empty = $uri")
+                }
+
+                if (playList != null) {
+                    Log.d(tag, "set in playList ImageUri  = $playListPictureUri")
+                    createPlayListViewModel.editPlaylist(
+                        name = binding.editTextPlaylistName.text.toString(),
+                        description = binding.editTextPlaylistDescription.text.toString(),
+                        imageUri = playListPictureUri,
+                        playList = playList!!
+                    )
+                }
                 findNavController().navigateUp()
             }
         }
@@ -214,13 +266,34 @@ class CreatePlaylistFragment : Fragment() {
                     findNavController().navigateUp()
                 }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         addBackPressedCallback()
+
+        observeValues()
     }
+
+    private fun observeValues() {
+        createPlayListViewModel.createPlayListState.observe(viewLifecycleOwner) {
+            when (it) {
+                is CreatePlayListViewState.EditPlayList -> {
+
+                    binding.editTextPlaylistName.setText(it.playList.playListName)
+                    binding.editTextPlaylistDescription.setText(it.playList.playlistDescription)
+                    Log.d(tag, "observe playlistImageUri= ${it.playList.playlistImageUri}")
+                    setPlayListImage(it.playList.playlistImageUri.toUri())
+
+                    binding.textViewNewPlaylist.text = getString(R.string.edit)
+                    binding.buttonCreatePlaylist.visibility = View.GONE
+                    binding.buttonEditPlaylist.visibility = View.VISIBLE
+                }
+
+                else -> {
+                    Log.d(tag, "observe Values smth wrong")
+                }
+            }
+        }
+    }
+
 
     private fun saveImageToPrivateStorage(uri: Uri) {
 
@@ -231,30 +304,37 @@ class CreatePlaylistFragment : Fragment() {
             filePath.mkdirs()
         }
 
-        val file = File(filePath, "${binding.editTextPlaylistName.text}_cover.jpg")
+        val file =
+            File(filePath, "${SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(Date())}_cover.jpg")
 
         val inputStream = context?.contentResolver?.openInputStream(uri)
 
         val outputStream = FileOutputStream(file)
+        try {
+            BitmapFactory
+                .decodeStream(inputStream)
+                .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        } catch (e: Exception) {
+            Log.d(tag, "saveImageToPrivateStorage catch ${e.localizedMessage}")
+        }
 
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+
         inputStream?.close()
         outputStream.close()
 
-
+        Log.d(tag, "saveImageToPrivateStorage uri= ${Uri.fromFile(file).toString()}")
         playListPictureUri = Uri.fromFile(file).toString()
+        Log.d(tag, "saveImageToPrivateStorage playListPictureUri= $playListPictureUri")
 
     }
 
     private fun addBackPressedCallback() {
-        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 try {
                     checkEmptyFields()
-                }catch (e:Exception){
-                    Log.d("track","catch ${e.message}")
+                } catch (e: Exception) {
+                    Log.d(tag, "catch ${e.localizedMessage}")
                     findNavController().navigateUp()
                 }
 
@@ -263,21 +343,27 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun checkEmptyFields() {
-        if (isFieldPictureNameAndDescriptionIsEmpty()) {
+        if (isUserEditPlayList) {
             findNavController().navigateUp()
-        } else {
-            confirmDialog?.show()
-        }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-       _binding = null
+        } else {
+            if (isFieldPictureNameAndDescriptionIsEmpty()) {
+                findNavController().navigateUp()
+            } else {
+                confirmDialog?.show()
+            }
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun checkPermission() {
@@ -308,6 +394,7 @@ class CreatePlaylistFragment : Fragment() {
             }
         }
     }
+
 
     private fun choosePicture() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))

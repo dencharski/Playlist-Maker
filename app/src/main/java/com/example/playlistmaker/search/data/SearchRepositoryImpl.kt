@@ -25,7 +25,7 @@ class SearchRepositoryImpl(
             try {
                 val response = iTunesSearchClient?.search(text)
 
-                if (response?.isSuccessful == true) {
+                 if (response?.isSuccessful == true) {
                     responseResult = response
                     response.body()?.let { map(it, favoriteTracks) }
 
